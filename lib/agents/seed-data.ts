@@ -12,7 +12,7 @@ const SEED_AGENTS: CreateAgentInput[] = [
     ]},
     actions: [
       { type: 'slack', config: { channel: '#fathom-alerts', template: '{title}' } },
-      { type: 'email', config: { to: 'compliance@company.com', template: '{title}' } },
+      { type: 'email', config: { to: 'isaacbikjk@gmail.com', template: '{title}' } },
     ],
     fish_config: { species: 'clownfish', colour: 'auto', accessory: 'top_hat' },
   },
@@ -63,7 +63,7 @@ const SEED_AGENTS: CreateAgentInput[] = [
     ]},
     actions: [
       { type: 'slack', config: { channel: '#fathom-alerts', template: 'Vulnerability scan: {target} — risk {risk_score}/10' } },
-      { type: 'email', config: { to: 'security@company.com', template: '{target} scan complete — {risk_level}' } },
+      { type: 'email', config: { to: 'isaacbikjk@gmail.com', template: '{target} scan complete — {risk_level}' } },
     ],
     fish_config: { species: 'pufferfish', colour: '0', accessory: 'glasses' },
   },
@@ -89,15 +89,15 @@ export async function seedIfEmpty() {
   const now = Date.now();
   const mockActions = [
     { agent_id: created[0].id, agent_name: created[0].name, action_type: 'slack', target: '#fathom-alerts', timestamp: new Date(now - 7200000).toISOString(), detail: 'MAS consultation paper on DPT services — relevance 9/10' },
-    { agent_id: created[0].id, agent_name: created[0].name, action_type: 'email', target: 'compliance@company.com', timestamp: new Date(now - 7100000).toISOString(), detail: 'MAS consultation paper on DPT services — relevance 9/10' },
+    { agent_id: created[0].id, agent_name: created[0].name, action_type: 'email', target: 'isaacbikjk@gmail.com', timestamp: new Date(now - 7100000).toISOString(), detail: 'MAS consultation paper on DPT services — relevance 9/10' },
     { agent_id: created[0].id, agent_name: created[0].name, action_type: 'slack', target: '#fathom-alerts', timestamp: new Date(now - 3600000).toISOString(), detail: 'MAS circular on insurance distribution channels — relevance 7/10' },
-    { agent_id: created[0].id, agent_name: created[0].name, action_type: 'email', target: 'compliance@company.com', timestamp: new Date(now - 3500000).toISOString(), detail: 'MAS circular on insurance distribution channels — relevance 7/10' },
+    { agent_id: created[0].id, agent_name: created[0].name, action_type: 'email', target: 'isaacbikjk@gmail.com', timestamp: new Date(now - 3500000).toISOString(), detail: 'MAS circular on insurance distribution channels — relevance 7/10' },
     { agent_id: created[1].id, agent_name: created[1].name, action_type: 'telegram', target: 'Brian', timestamp: new Date(now - 5400000).toISOString(), detail: 'GRAB beat EPS by +200% — Q4 2025 earnings surprise' },
     { agent_id: created[1].id, agent_name: created[1].name, action_type: 'telegram', target: 'Brian', timestamp: new Date(now - 5300000).toISOString(), detail: 'SE beat EPS by +14.3% — Shopee profitability inflecting' },
     { agent_id: created[2].id, agent_name: created[2].name, action_type: 'slack', target: '#fathom-alerts', timestamp: new Date(now - 1800000).toISOString(), detail: 'Risk alert: Acme Corp — risk score 8/10, 3 red flags detected' },
     { agent_id: created[2].id, agent_name: created[2].name, action_type: 'slack', target: '#fathom-alerts', timestamp: new Date(now - 900000).toISOString(), detail: 'DD complete: Grab Holdings — risk score 3/10, LOW-MEDIUM risk' },
     { agent_id: created[4].id, agent_name: created[4].name, action_type: 'slack', target: '#fathom-alerts', timestamp: new Date(now - 2700000).toISOString(), detail: 'Scan complete: api.staging.example.com — CRITICAL, 3 critical vulns found' },
-    { agent_id: created[4].id, agent_name: created[4].name, action_type: 'email', target: 'security@company.com', timestamp: new Date(now - 2600000).toISOString(), detail: 'Scan complete: api.staging.example.com — CRITICAL risk, IDOR + JWT + SSRF' },
+    { agent_id: created[4].id, agent_name: created[4].name, action_type: 'email', target: 'isaacbikjk@gmail.com', timestamp: new Date(now - 2600000).toISOString(), detail: 'Scan complete: api.staging.example.com — CRITICAL risk, IDOR + JWT + SSRF' },
   ];
 
   for (const action of mockActions) {
