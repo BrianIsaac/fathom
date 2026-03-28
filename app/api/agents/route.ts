@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 import { CreateAgentSchema } from '@/lib/agents/types';
 import { listAgents, createAgent, updateAgent, deleteAgent } from '@/lib/agents/store';
+import { isMockMode } from '@/lib/data';
+import { seedIfEmpty } from '@/lib/agents/seed-data';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const agents = await listAgents();
+  let agents = await listAgents();
+  if (agents.length === 0 && isMockMode()) {
+    agents = await seedIfEmpty();
+  }
   return NextResponse.json(agents);
 }
 

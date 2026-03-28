@@ -22,6 +22,7 @@ import {
   TrendingUp,
   ScrollText,
   FlaskConical,
+  ShieldAlert,
 } from 'lucide-react';
 
 const SECTIONS = [
@@ -39,6 +40,7 @@ const SECTIONS = [
       { title: 'Due Diligence', href: '/due-diligence', icon: Search },
       { title: 'Earnings', href: '/earnings', icon: TrendingUp },
       { title: 'Regulatory', href: '/regulatory', icon: ScrollText },
+      { title: 'Cyber Scan', href: '/cyber', icon: ShieldAlert },
     ],
   },
   {

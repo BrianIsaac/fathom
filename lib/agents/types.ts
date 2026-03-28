@@ -26,7 +26,7 @@ export const AgentSchema = z.object({
   id: z.string(),
   name: z.string(),
   enabled: z.boolean(),
-  module: z.enum(['regulatory', 'due_diligence', 'earnings']),
+  module: z.enum(['regulatory', 'due_diligence', 'earnings', 'cyber']),
   conditions: ConditionsSchema,
   actions: z.array(ActionConfigSchema),
   fish_config: FishConfigSchema,

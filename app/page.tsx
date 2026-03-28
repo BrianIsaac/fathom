@@ -5,6 +5,7 @@ import type { Agent, AgentAction } from '@/lib/agents/types';
 import { FishBowl } from '@/components/pool/fish-bowl';
 import { FishSpriteComponent } from '@/components/pool/fish-sprite';
 import { EmptyPool } from '@/components/pool/empty-pool';
+import { ActionBubble } from '@/components/pool/action-bubble';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,8 @@ export default function FathomPoolPage() {
   const [error, setError] = useState<string | null>(null);
   const [triggering, setTriggering] = useState(false);
   const [triggerResult, setTriggerResult] = useState<{ agents_matched: number; results: Array<{ agent: string; matched: boolean; actions_fired: string[] }> } | null>(null);
+  const [activeBubbles, setActiveBubbles] = useState<AgentAction[]>([]);
+  const prevActivityRef = useRef<number>(0);
   const bowlRef = useRef<HTMLDivElement>(null);
 
   const loadAgents = useCallback(async () => {
@@ -72,6 +75,18 @@ export default function FathomPoolPage() {
       window.removeEventListener('resize', debouncedMeasure);
     };
   }, [loadAgents, loadActivity]);
+
+  useEffect(() => {
+    if (activity.length > prevActivityRef.current && prevActivityRef.current > 0) {
+      const newActions = activity.slice(0, activity.length - prevActivityRef.current);
+      setActiveBubbles(prev => [...prev, ...newActions]);
+    }
+    prevActivityRef.current = activity.length;
+  }, [activity]);
+
+  const dismissBubble = useCallback((timestamp: string) => {
+    setActiveBubbles(prev => prev.filter(b => b.timestamp !== timestamp));
+  }, []);
 
   const triggerAgents = async () => {
     try {
@@ -131,12 +146,22 @@ export default function FathomPoolPage() {
             <EmptyPool />
           ) : (
             agents.map(agent => (
-              <FishSpriteComponent
-                key={agent.id}
-                agent={agent}
-                bowlWidth={bowlSize.width}
-                bowlHeight={bowlSize.height}
-              />
+              <div key={agent.id} className="contents">
+                <FishSpriteComponent
+                  agent={agent}
+                  bowlWidth={bowlSize.width}
+                  bowlHeight={bowlSize.height}
+                />
+                {activeBubbles
+                  .filter(b => b.agent_id === agent.id)
+                  .slice(0, 1)
+                  .map(b => (
+                    <div key={b.timestamp} className="absolute z-50" style={{ left: '50%', top: '20%' }}>
+                      <ActionBubble action={b} onDismiss={() => dismissBubble(b.timestamp)} />
+                    </div>
+                  ))
+                }
+              </div>
             ))
           )}
         </FishBowl>

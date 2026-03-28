@@ -16,7 +16,7 @@ interface Agent {
   id: string;
   name: string;
   enabled: boolean;
-  module: 'regulatory' | 'due_diligence' | 'earnings';
+  module: 'regulatory' | 'due_diligence' | 'earnings' | 'cyber';
   conditions: { operator: string; checks: Array<{ fact: string; operator: string; value: unknown }> };
   actions: Array<{ type: string; config: Record<string, string> }>;
   fish_sprite: string;
@@ -29,7 +29,7 @@ export default function DeployPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState('');
-  const [module, setModule] = useState<'regulatory' | 'due_diligence' | 'earnings'>('regulatory');
+  const [module, setModule] = useState<'regulatory' | 'due_diligence' | 'earnings' | 'cyber'>('regulatory');
   const [condOperator, setCondOperator] = useState<'all' | 'any'>('all');
   const [checks, setChecks] = useState([{ fact: '', operator: 'equal', value: '' }]);
   const [actionType, setActionType] = useState('slack');
@@ -69,18 +69,30 @@ export default function DeployPage() {
 
   const createAgent = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/agents', {
+    setError(null);
+    const parsedChecks = checks.filter(c => c.fact).map(c => ({
+      ...c,
+      value: c.operator === 'greaterThan' || c.operator === 'lessThan'
+        ? (isNaN(Number(c.value)) ? c.value : Number(c.value))
+        : c.value,
+    }));
+    const res = await fetch('/api/agents', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name,
         enabled: true,
         module,
-        conditions: { operator: condOperator, checks: checks.filter(c => c.fact) },
+        conditions: { operator: condOperator, checks: parsedChecks },
         actions: [{ type: actionType, config: actionConfig }],
         fish_config: fishConfig,
       }),
     });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ error: 'Failed to create agent' }));
+      setError(typeof body.error === 'string' ? body.error : JSON.stringify(body.error));
+      return;
+    }
     router.push('/');
   };
 
@@ -129,6 +141,7 @@ export default function DeployPage() {
                   <option value="regulatory">Regulatory</option>
                   <option value="due_diligence">Due Diligence</option>
                   <option value="earnings">Earnings</option>
+                  <option value="cyber">Cyber</option>
                 </select>
               </div>
 
@@ -251,7 +264,17 @@ export default function DeployPage() {
               <div>
                 <p className="text-sm font-medium mb-2">Action</p>
                 <div className="flex gap-2">
-                  <select value={actionType} onChange={e => setActionType(e.target.value)} className="rounded-md border px-3 py-2 text-sm bg-background text-foreground">
+                  <select value={actionType} onChange={e => {
+                    const newType = e.target.value;
+                    setActionType(newType);
+                    const defaults: Record<string, Record<string, string>> = {
+                      slack: { channel: '', template: '' },
+                      email: { to: '', subject: '', template: '' },
+                      telegram: { chat_id: '', template: '' },
+                      webhook: { url: '' },
+                    };
+                    setActionConfig(defaults[newType] ?? {});
+                  }} className="rounded-md border px-3 py-2 text-sm bg-background text-foreground">
                     {['slack', 'email', 'telegram', 'webhook'].map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                   {actionType === 'slack' && (

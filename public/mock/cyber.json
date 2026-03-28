@@ -1,0 +1,142 @@
+{
+  "target": "https://preview.owasp-juice.shop",
+  "generated_at": "2026-03-28T07:30:00Z",
+  "scan_duration_ms": 342000,
+  "total_agents": 10,
+  "recon": {
+    "status": "success",
+    "duration_ms": 45000,
+    "endpoints_found": 18,
+    "auth_mechanism": "JWT (HS256)",
+    "tech_stack": "Express.js, Angular, SQLite",
+    "public_endpoints": ["/api/Products", "/api/SecurityQuestions", "/rest/admin/application-version"],
+    "auth_required": ["/api/Users", "/api/Cards", "/rest/basket", "/api/Orders"]
+  },
+  "findings": [
+    {
+      "id": "idor-api",
+      "name": "IDOR — API Resource Access",
+      "category": "A01-BrokenAccessControl",
+      "severity": "Critical",
+      "status": "VULNERABLE",
+      "duration_ms": 62000,
+      "summary": "Horizontal IDOR on /api/Users/{id} and /rest/basket/{id} — any authenticated user can access other users' data by changing the ID parameter.",
+      "evidence": "GET /api/Users/1 returned admin@juice-sh.op profile. GET /rest/basket/2 returned another user's cart."
+    },
+    {
+      "id": "jwt-security",
+      "name": "JWT & Session Token Analysis",
+      "category": "A07-AuthFailures",
+      "severity": "Critical",
+      "status": "VULNERABLE",
+      "duration_ms": 58000,
+      "summary": "JWT uses weak HS256 secret. Algorithm confusion attack succeeds — setting alg to 'none' bypasses signature verification. Token does not expire.",
+      "evidence": "Modified JWT with alg:'none' accepted by /api/Users endpoint. No exp claim in token."
+    },
+    {
+      "id": "ssrf",
+      "name": "SSRF — Server-Side Request Forgery",
+      "category": "A10-SSRF",
+      "severity": "Critical",
+      "status": "NOT_VULNERABLE",
+      "duration_ms": 35000,
+      "summary": "No URL input fields found in standard user flows. Profile image uses file upload, not URL fetch.",
+      "evidence": "Tested /profile/image endpoint — only accepts file uploads, not URLs."
+    },
+    {
+      "id": "mass-assignment",
+      "name": "Mass Assignment & Parameter Pollution",
+      "category": "API-BOLA",
+      "severity": "Critical",
+      "status": "VULNERABLE",
+      "duration_ms": 42000,
+      "summary": "PUT /api/Users/{id} accepts 'role' field — setting role to 'admin' grants admin privileges.",
+      "evidence": "PUT /api/Users/22 with {\"role\":\"admin\"} — subsequent requests show admin panel accessible."
+    },
+    {
+      "id": "security-headers",
+      "name": "Security Headers & CSP Audit",
+      "category": "A05-SecurityMisconfig",
+      "severity": "High",
+      "status": "VULNERABLE",
+      "duration_ms": 12000,
+      "summary": "Missing critical headers: no CSP, no X-Frame-Options, X-Powered-By exposes Express version.",
+      "evidence": "Headers: X-Powered-By: Express. No Content-Security-Policy. No X-Frame-Options. No Strict-Transport-Security."
+    },
+    {
+      "id": "api-auth-abuse",
+      "name": "API Rate Limiting & User Enumeration",
+      "category": "API-Security",
+      "severity": "High",
+      "status": "VULNERABLE",
+      "duration_ms": 28000,
+      "summary": "No rate limiting on login endpoint. Different error messages for valid vs invalid emails enable user enumeration.",
+      "evidence": "10 rapid failed logins accepted without lockout. 'Invalid email or password' vs 'Invalid email or password' — message identical but response time differs (200ms valid email, 50ms invalid)."
+    },
+    {
+      "id": "file-upload",
+      "name": "File Upload & XXE Exploitation",
+      "category": "A03-Injection",
+      "severity": "High",
+      "status": "VULNERABLE",
+      "duration_ms": 55000,
+      "summary": "Complaint form accepts XML uploads. XXE payload successfully reads /etc/passwd.",
+      "evidence": "Uploaded XML with <!ENTITY xxe SYSTEM 'file:///etc/passwd'> — response contained root:x:0:0:root:/root:/bin/bash"
+    },
+    {
+      "id": "input-boundary",
+      "name": "Business Logic & Input Boundary Abuse",
+      "category": "A04-InsecureDesign",
+      "severity": "High",
+      "status": "VULNERABLE",
+      "duration_ms": 48000,
+      "summary": "Negative quantity accepted in basket API — creates negative order total. CAPTCHA answer exposed in page source.",
+      "evidence": "PUT /api/BasketItems/7 with quantity:-100 accepted. Checkout with negative total succeeded."
+    },
+    {
+      "id": "outdated-components",
+      "name": "Outdated Components & Supply Chain Risk",
+      "category": "A06-VulnerableComponents",
+      "severity": "High",
+      "status": "VULNERABLE",
+      "duration_ms": 22000,
+      "summary": "Angular 1.x detected (prototype pollution, XSS). Multiple client-side libraries with known CVEs.",
+      "evidence": "angular.version: 1.5.9 (EOL, multiple CVEs). jQuery 2.2.4 (CVE-2020-11022). sanitize-html with known bypasses."
+    },
+    {
+      "id": "open-redirect",
+      "name": "Open Redirect & URL Validation",
+      "category": "A01-BrokenAccessControl",
+      "severity": "Medium",
+      "status": "VULNERABLE",
+      "duration_ms": 18000,
+      "summary": "Redirect parameter in login flow accepts arbitrary external URLs.",
+      "evidence": "/redirect?to=https://evil.com successfully redirects. Protocol-relative //evil.com also works."
+    }
+  ],
+  "synthesis": {
+    "risk_score": 8,
+    "risk_level": "CRITICAL",
+    "vulnerabilities_found": 9,
+    "not_vulnerable": 1,
+    "critical_count": 3,
+    "high_count": 5,
+    "medium_count": 1,
+    "top_priority": [
+      "JWT algorithm confusion allows authentication bypass — immediate fix required",
+      "IDOR on user and basket APIs exposes all user data — implement per-resource authorisation",
+      "Mass assignment enables privilege escalation to admin — whitelist accepted fields"
+    ],
+    "owasp_coverage": {
+      "A01-BrokenAccessControl": "VULNERABLE",
+      "A03-Injection": "VULNERABLE",
+      "A04-InsecureDesign": "VULNERABLE",
+      "A05-SecurityMisconfig": "VULNERABLE",
+      "A06-VulnerableComponents": "VULNERABLE",
+      "A07-AuthFailures": "VULNERABLE",
+      "A10-SSRF": "NOT_VULNERABLE",
+      "API-Security": "VULNERABLE",
+      "API-BOLA": "VULNERABLE"
+    }
+  }
+}

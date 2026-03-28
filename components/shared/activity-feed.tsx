@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import type { StreamEvent } from '@/hooks/useTinyFishStream';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +19,12 @@ export function ActivityFeed({ events }: { events: StreamEvent[] }) {
     e.type === 'TIER_CHECK'
   );
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [feedEvents.length]);
+
   if (feedEvents.length === 0) return null;
 
   return (
@@ -33,6 +40,7 @@ export function ActivityFeed({ events }: { events: StreamEvent[] }) {
               <EventDetail event={event} />
             </div>
           ))}
+          <div ref={bottomRef} />
         </div>
       </CardContent>
     </Card>

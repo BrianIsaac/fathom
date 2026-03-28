@@ -18,9 +18,13 @@ export async function runMinoAutomation(
   config: MinoRequestConfig,
   apiKey: string,
   callbacks?: MinoCallbacks,
+  timeoutMs?: number,
 ): Promise<MinoResponse> {
   const events: MinoEvent[] = [];
   let streamingUrl: string | undefined;
+
+  const controller = timeoutMs ? new AbortController() : undefined;
+  const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : undefined;
 
   const response = await fetch(TINYFISH_API_URL, {
     method: 'POST',
@@ -30,7 +34,8 @@ export async function runMinoAutomation(
       'Accept': 'text/event-stream',
     },
     body: JSON.stringify(config),
-  });
+    signal: controller?.signal,
+  }).finally(() => { if (timer) clearTimeout(timer); });
 
   if (!response.ok) {
     throw new TinyFishError(`TinyFish API error: ${response.status}`, response.status);

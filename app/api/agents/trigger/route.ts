@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { listAgents, logAgentAction, updateAgent } from '@/lib/agents/store';
 import { evaluateAgent } from '@/lib/agents/engine';
 import { dispatchActions, type ActionResult } from '@/lib/actions/dispatcher';
+import { isMockMode } from '@/lib/data';
+import { seedIfEmpty } from '@/lib/agents/seed-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +34,15 @@ const MOCK_FACTS: Record<string, Record<string, unknown>> = {
     title: 'GRAB beat EPS estimate by +200%',
     company_name: 'Grab Holdings',
   },
+  cyber: {
+    target: 'api.staging.example.com',
+    risk_score: 8,
+    risk_level: 'CRITICAL',
+    critical_count: 3,
+    high_count: 5,
+    title: 'OWASP scan: 3 critical vulnerabilities detected',
+    findings_count: 10,
+  },
 };
 
 /**
@@ -41,7 +52,10 @@ const MOCK_FACTS: Record<string, Record<string, unknown>> = {
  * Use this to test the full agent → action → activity pipeline without real data.
  */
 export async function POST() {
-  const agents = await listAgents();
+  let agents = await listAgents();
+  if (agents.length === 0 && isMockMode()) {
+    agents = await seedIfEmpty();
+  }
   const results: Array<{
     agent: string;
     module: string;

@@ -6,6 +6,7 @@ const MOCK_FILES: Record<string, string> = {
   earnings: 'earnings.json',
   regulatory: 'regulatory.json',
   eval: 'eval.json',
+  cyber: 'cyber.json',
 };
 
 /**

@@ -41,12 +41,14 @@ const MODULE_HUE: Record<string, number> = {
   regulatory: 25,
   due_diligence: 220,
   earnings: 140,
+  cyber: 0,
 };
 
 const MODULE_SPECIES: Record<string, string> = {
   regulatory: 'clownfish',
   due_diligence: 'angelfish',
   earnings: 'pufferfish',
+  cyber: 'pufferfish',
 };
 
 /**
@@ -71,7 +73,7 @@ const ANCHORS: Record<string, FishAnchors> = {
 };
 
 export function generateFishSVG(
-  module: 'regulatory' | 'due_diligence' | 'earnings',
+  module: string,
   seed: string,
   config?: FishConfig,
 ): string {

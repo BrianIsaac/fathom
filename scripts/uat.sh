@@ -160,6 +160,7 @@ check_sse "Sentry SSE with tier cascade" "$BASE/api/sentry/regulatory" '{"busine
 check_sse "DD SSE with source events" "$BASE/api/dd/run" '{"company":"Grab","jurisdiction":"SG","ticker":"GRAB"}' "STARTED,SOURCE_START,SOURCE_COMPLETE,COMPLETE"
 check_sse "Earnings SSE with ticker events" "$BASE/api/earnings/run" '{"tickers":"AAPL,MSFT"}' "STARTED,TICKER_STARTED,TICKER_COMPLETE,COMPLETE"
 check_sse "Eval SSE with task events" "$BASE/api/eval/run" "{}" "STARTED,TASK_STARTED,TASK_COMPLETE,COMPLETE"
+check_sse "Cyber SSE with attack events" "$BASE/api/cyber/scan" '{"target":"https://example.com"}' "STARTED,RECON_START,RECON_COMPLETE,ATTACK_START,ATTACK_COMPLETE,COMPLETE"
 
 # ─── API: OTHER ENDPOINTS ────────────────────────────────────
 echo ""
@@ -223,7 +224,7 @@ fi
 echo ""
 echo "--- Pages: Render Check ---"
 
-for page in "/" "/deploy" "/sentries" "/due-diligence" "/earnings" "/regulatory" "/eval"; do
+for page in "/" "/deploy" "/sentries" "/due-diligence" "/earnings" "/regulatory" "/eval" "/cyber"; do
   check_status "Page $page renders" "$BASE$page"
 done
 
@@ -253,11 +254,14 @@ check_contains "Regulatory has scan button" "$REG_HTML" "Scan Regulators"
 EVAL_HTML=$(curl -s "$BASE/eval")
 check_contains "Eval has dashboard heading" "$EVAL_HTML" "Eval Dashboard"
 
+CYBER_HTML=$(curl -s "$BASE/cyber")
+check_contains "Cyber has scan heading" "$CYBER_HTML" "Cyber Scan"
+
 # ─── SIDEBAR: NAVIGATION ─────────────────────────────────────
 echo ""
 echo "--- Sidebar Navigation ---"
 
-for link in "/" "/deploy" "/sentries" "/due-diligence" "/earnings" "/regulatory" "/eval"; do
+for link in "/" "/deploy" "/sentries" "/due-diligence" "/earnings" "/regulatory" "/eval" "/cyber"; do
   check_contains "Sidebar has link to $link" "$POOL_HTML" "href=\"$link\""
 done
 

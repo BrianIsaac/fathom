@@ -56,7 +56,8 @@ export default function SentriesPage() {
             e => (e as Record<string, unknown>).source === source.id && e.type === 'SOURCE_COMPLETE'
           );
           const isRunning = isLoading && !sourceEvent;
-          const status = isRunning ? 'running' : sourceEvent ? 'success' : 'pending';
+          const completedStatus = sourceEvent ? String((sourceEvent as Record<string, unknown>).status ?? 'success') : null;
+          const status = isRunning ? 'running' : completedStatus === 'failed' ? 'failed' : completedStatus ? 'success' : 'pending';
 
           return (
             <Card
