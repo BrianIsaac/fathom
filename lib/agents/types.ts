@@ -17,7 +17,7 @@ export const ActionConfigSchema = z.object({
 });
 
 export const FishConfigSchema = z.object({
-  species: z.enum(['auto', 'clownfish', 'angelfish', 'pufferfish']).default('auto'),
+  species: z.enum(['auto', 'clownfish', 'angelfish', 'pufferfish', 'tinyfish']).default('auto'),
   colour: z.string().default('auto'),
   accessory: z.enum(['none', 'top_hat', 'party_hat', 'crown', 'beanie', 'glasses', 'monocle', 'bow_tie', 'scarf']).default('none'),
 });

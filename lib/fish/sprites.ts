@@ -25,10 +25,11 @@ export const COLOUR_OPTIONS = [
   { value: '140', label: 'Green' },
 ];
 
-export type Species = 'auto' | 'clownfish' | 'angelfish' | 'pufferfish';
+export type Species = 'auto' | 'clownfish' | 'angelfish' | 'pufferfish' | 'tinyfish';
 
 export const SPECIES_OPTIONS: { value: Species; label: string }[] = [
   { value: 'auto', label: 'Auto (from module)' },
+  { value: 'tinyfish', label: 'TinyFish' },
   { value: 'clownfish', label: 'Clownfish' },
   { value: 'angelfish', label: 'Angelfish' },
   { value: 'pufferfish', label: 'Pufferfish' },
@@ -62,6 +63,7 @@ const ANCHORS: Record<string, FishAnchors> = {
   clownfish: { hatX: 48, hatY: 16, eyeX: 58, eyeY: 28, chinX: 48, chinY: 42 },
   angelfish: { hatX: 38, hatY: 16, eyeX: 52, eyeY: 32, chinX: 44, chinY: 50 },
   pufferfish: { hatX: 36, hatY: 14, eyeX: 46, eyeY: 32, chinX: 38, chinY: 50 },
+  tinyfish: { hatX: 30, hatY: 10, eyeX: 44, eyeY: 31, chinX: 38, chinY: 50 },
 };
 
 export function generateFishSVG(
@@ -86,19 +88,49 @@ export function generateFishSVG(
   const anchors = ANCHORS[species];
   const acc = accessorySVG(accessory, anchors);
 
-  const vw = species === 'pufferfish' ? 72 : 80;
-  const vh = species === 'angelfish' ? 56 : species === 'pufferfish' ? 56 : 48;
+  const vw = species === 'pufferfish' || species === 'tinyfish' ? 72 : 80;
+  const vh = species === 'angelfish' || species === 'pufferfish' || species === 'tinyfish' ? 56 : 48;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh + 16}" width="${vw}" height="${vh + 16}">${body}${acc}</svg>`;
 }
 
 function fishBody(species: string, h: number): string {
   switch (species) {
+    case 'tinyfish': return tinyfishBody(h);
     case 'clownfish': return clownfishBody(h);
     case 'angelfish': return angelfishBody(h);
     case 'pufferfish': return pufferfishBody(h);
     default: return clownfishBody(h);
   }
+}
+
+function tinyfishBody(h: number): string {
+  return `<g transform="translate(0,8)">
+    <path
+      d="M28 8 C22 4, 14 6, 12 13 C11 18, 13 22, 17 25 C12 28, 9 34, 10 40 C12 49, 20 54, 32 54 C44 54, 54 48, 57 38 C60 28, 56 18, 47 12 C41 8, 35 7, 28 8 Z"
+      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
+    />
+    <path
+      d="M30 4 C24 0, 16 2, 15 9 C18 11, 22 11, 26 9 C28 8, 30 6, 30 4 Z"
+      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
+    />
+    <path
+      d="M30 4 C34 1, 42 1, 47 7 C44 10, 39 11, 35 10 C32 9, 30 7, 30 4 Z"
+      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
+    />
+    <path
+      d="M14 23 C8 22, 4 27, 6 33 C10 35, 14 34, 17 31 C18 28, 17 25, 14 23 Z"
+      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
+    />
+    <path
+      d="M24 17 C19 20, 16 26, 16 33 C16 43, 24 49, 34 49 C43 49, 51 43, 53 34 C54 28, 52 22, 47 17 C41 14, 31 14, 24 17 Z"
+      fill="hsl(${h}, 70%, 82%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
+    />
+    <ellipse cx="43.5" cy="31" rx="5.2" ry="6.2" fill="#ffffff" stroke="#1a1a2e" stroke-width="2"/>
+    <ellipse cx="44.5" cy="32" rx="2.8" ry="3.5" fill="#1a1a2e"/>
+    <circle cx="46.2" cy="29.6" r="1.1" fill="#ffffff"/>
+    <path d="M34 37 Q38 41, 43 38" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+  </g>`;
 }
 
 function clownfishBody(h: number): string {
