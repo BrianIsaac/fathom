@@ -113,30 +113,80 @@ function fishBody(species: string, h: number): string {
 
 function tinyfishBody(h: number): string {
   return `<g transform="translate(0,8)">
-    <path
-      d="M28 8 C22 4, 14 6, 12 13 C11 18, 13 22, 17 25 C12 28, 9 34, 10 40 C12 49, 20 54, 32 54 C44 54, 54 48, 57 38 C60 28, 56 18, 47 12 C41 8, 35 7, 28 8 Z"
-      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
-    />
-    <path
-      d="M30 4 C24 0, 16 2, 15 9 C18 11, 22 11, 26 9 C28 8, 30 6, 30 4 Z"
-      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
-    />
-    <path
-      d="M30 4 C34 1, 42 1, 47 7 C44 10, 39 11, 35 10 C32 9, 30 7, 30 4 Z"
-      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
-    />
-    <path
-      d="M14 23 C8 22, 4 27, 6 33 C10 35, 14 34, 17 31 C18 28, 17 25, 14 23 Z"
-      fill="hsl(${h}, 78%, 54%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
-    />
-    <path
-      d="M24 17 C19 20, 16 26, 16 33 C16 43, 24 49, 34 49 C43 49, 51 43, 53 34 C54 28, 52 22, 47 17 C41 14, 31 14, 24 17 Z"
-      fill="hsl(${h}, 70%, 82%)" stroke="#1a1a2e" stroke-width="2" stroke-linejoin="round"
-    />
-    <ellipse cx="43.5" cy="31" rx="5.2" ry="6.2" fill="#ffffff" stroke="#1a1a2e" stroke-width="2"/>
-    <ellipse cx="44.5" cy="32" rx="2.8" ry="3.5" fill="#1a1a2e"/>
-    <circle cx="46.2" cy="29.6" r="1.1" fill="#ffffff"/>
-    <path d="M34 37 Q38 41, 43 38" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M14 24 C8 18, 6 11, 13 9 C18 8, 22 12, 24 17 C26 12, 30 8, 35 9 C42 11, 40 18, 34 24 C40 30, 42 37, 35 39 C30 40, 26 36, 24 31 C22 36, 18 40, 13 39 C6 37, 8 30, 14 24 Z" fill="hsl(${h}, 80%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <ellipse cx="39" cy="24" rx="23" ry="19" fill="hsl(${h}, 80%, 55%)" stroke="#1a1a2e" stroke-width="2.5"/>
+    <path d="M28 11 C40 8, 54 13, 58 23 C55 33, 42 39, 30 35 C23 32, 20 26, 21 20 C22 16, 24 13, 28 11 Z" fill="hsl(${h}, 65%, 80%)" stroke="none"/>
+    <path d="M36 8 C39 2, 46 1, 49 8 C45 10, 40 11, 36 8 Z" fill="hsl(${h}, 80%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M34 38 C38 43, 46 43, 49 36 C44 35, 38 35, 34 38 Z" fill="hsl(${h}, 80%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="51" cy="22" rx="5.8" ry="7.2" fill="#ffffff" stroke="#1a1a2e" stroke-width="2.5"/>
+    <ellipse cx="52.5" cy="23.5" rx="2.8" ry="3.6" fill="#1a1a2e"/>
+    <circle cx="53.4" cy="21.5" r="1" fill="#ffffff"/>
+    <path d="M47 31 C49 33, 52 33.5, 54 31.5" fill="none" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="46" cy="28.5" r="1.4" fill="hsl(${h}, 80%, 68%)" opacity="0.75"/>
+  </g>`;
+}
+
+function tinyfishCoderBody(h: number): string {
+  return `<g transform="translate(0,8)">
+    <path d="M12 24 C6 18, 6 10, 14 10 C18 10, 21 13, 22 17 C23 13, 26 10, 30 10 C38 10, 38 18, 32 24 C27 29, 17 29, 12 24 Z" fill="hsl(${h}, 78%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="38" cy="26" rx="24" ry="20" fill="hsl(${h}, 78%, 55%)" stroke="#1a1a2e" stroke-width="2.5"/>
+    <ellipse cx="43" cy="29" rx="18" ry="15" fill="hsl(38, 72%, 82%)" stroke="#1a1a2e" stroke-width="2.5"/>
+    <path d="M34 9 C36 3, 43 2, 47 8 C43 10, 38 11, 34 9 Z" fill="hsl(${h}, 78%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M21 38 C16 42, 15 48, 20 51 C24 49, 27 44, 26 39 Z" fill="hsl(${h}, 78%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M23 17 C25 8, 35 4, 46 6 C56 8, 61 16, 58 23 C52 20, 43 19, 34 19 C29 19, 25 18, 23 17 Z" fill="#1a1a2e" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="42" cy="27" r="5.5" fill="none" stroke="#1a1a2e" stroke-width="2.5"/>
+    <circle cx="53" cy="27" r="5.5" fill="none" stroke="#1a1a2e" stroke-width="2.5"/>
+    <path d="M47.5 27 L47.5 27" fill="none" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M36.8 24.8 C35.5 24.3, 34.2 24.4, 33 25.2" fill="none" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="54" cy="27.8" rx="2.7" ry="3.5" fill="#1a1a2e"/>
+    <circle cx="55.1" cy="26.6" r="0.9" fill="#ffffff"/>
+    <path d="M46 35 C48.5 37.2, 52 37.2, 54.5 35" fill="none" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M31 35 C27 36, 24 39, 24 43 C28 44, 32 42, 34 39 C34.5 37.5, 33.5 36, 31 35 Z" fill="hsl(${h}, 78%, 55%)" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M18 39 L28 37 L33 42 L23 44 Z" fill="#20243a" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M22 31 L31 29 L31 39 L22 41 Z" fill="#163325" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M24 33 L29 32 M24 35 L29 34 M24 37 L28.5 36 M24 39 L27.8 38" fill="none" stroke="#33dd77" stroke-width="1.2" stroke-linecap="round"/>
+  </g>`;
+}
+
+function tinyfishMatrixBody(h: number): string {
+  return `<g transform="translate(0,8)">
+    <path d="M14 24 C8 18, 6 12, 11 10 C15 9, 19 12, 21 17 C23 12, 27 9, 31 10 C36 12, 34 18, 28 24 C34 30, 36 36, 31 38 C27 39, 23 36, 21 31 C19 36, 15 39, 11 38 C6 36, 8 30, 14 24 Z" fill="#0a3d0a" stroke="#001a00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M28 14 C30 8, 36 6, 41 10 C39 15, 34 18, 29 18 Z" fill="#0a3d0a" stroke="#001a00" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M30 40 C33 45, 39 47, 44 43 C42 38, 36 36, 31 37 Z" fill="#0a3d0a" stroke="#001a00" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M20 24 C20 13, 30 6, 44 6 C58 6, 67 14, 67 24 C67 35, 58 43, 44 43 C30 43, 20 35, 20 24 Z" fill="#0a3d0a" stroke="#001a00" stroke-width="2.5" stroke-linejoin="round"/>
+    <defs><clipPath id="tf-matrix-clip"><path d="M20 24 C20 13, 30 6, 44 6 C58 6, 67 14, 67 24 C67 35, 58 43, 44 43 C30 43, 20 35, 20 24 Z"/></clipPath></defs>
+    <g clip-path="url(#tf-matrix-clip)">
+      <rect x="24" y="8" width="1.1" height="34" fill="#00ff41" opacity="0.22"/>
+      <rect x="26.5" y="7" width="0.9" height="35" fill="#00ff41" opacity="0.34"/>
+      <rect x="29" y="9" width="1.2" height="32" fill="#00ff41" opacity="0.26"/>
+      <rect x="31.5" y="8" width="0.8" height="33" fill="#00ff41" opacity="0.42"/>
+      <rect x="34" y="7" width="1.1" height="35" fill="#00ff41" opacity="0.28"/>
+      <rect x="36.5" y="8" width="0.9" height="33" fill="#00ff41" opacity="0.38"/>
+      <rect x="39" y="7" width="1.2" height="35" fill="#00ff41" opacity="0.24"/>
+      <rect x="41.5" y="8" width="0.8" height="33" fill="#00ff41" opacity="0.44"/>
+      <rect x="44" y="7" width="1.1" height="35" fill="#00ff41" opacity="0.27"/>
+      <rect x="46.5" y="8" width="0.9" height="33" fill="#00ff41" opacity="0.36"/>
+      <rect x="49" y="9" width="1.2" height="31" fill="#00ff41" opacity="0.23"/>
+      <rect x="51.5" y="8" width="0.8" height="33" fill="#00ff41" opacity="0.41"/>
+      <rect x="54" y="10" width="1.1" height="29" fill="#00ff41" opacity="0.25"/>
+      <rect x="56.5" y="11" width="0.9" height="27" fill="#00ff41" opacity="0.33"/>
+      <rect x="26.5" y="12" width="0.9" height="2" fill="#00ff41" opacity="0.65"/>
+      <rect x="29" y="19" width="1.2" height="2.5" fill="#00ff41" opacity="0.7"/>
+      <rect x="31.5" y="14" width="0.8" height="3" fill="#00ff41" opacity="0.72"/>
+      <rect x="34" y="25" width="1.1" height="2.5" fill="#00ff41" opacity="0.68"/>
+      <rect x="36.5" y="17" width="0.9" height="2.2" fill="#00ff41" opacity="0.74"/>
+      <rect x="39" y="28" width="1.2" height="2.5" fill="#00ff41" opacity="0.7"/>
+      <rect x="41.5" y="13" width="0.8" height="2.8" fill="#00ff41" opacity="0.76"/>
+      <rect x="44" y="22" width="1.1" height="2.4" fill="#00ff41" opacity="0.7"/>
+      <rect x="46.5" y="16" width="0.9" height="2.1" fill="#00ff41" opacity="0.75"/>
+      <rect x="49" y="26" width="1.2" height="2.6" fill="#00ff41" opacity="0.68"/>
+      <rect x="51.5" y="18" width="0.8" height="2.3" fill="#00ff41" opacity="0.73"/>
+      <rect x="54" y="14" width="1.1" height="2.2" fill="#00ff41" opacity="0.66"/>
+    </g>
+    <ellipse cx="55" cy="21" rx="5.4" ry="7" fill="#00ff41" stroke="#001a00" stroke-width="2.2"/>
+    <ellipse cx="56.2" cy="22.2" rx="2.2" ry="3.2" fill="#001a00"/>
+    <circle cx="53.5" cy="18.2" r="1.1" fill="#d8ffd8"/>
+    <path d="M52 30 C54 32, 57 32.5, 59.5 30.8" fill="none" stroke="#001a00" stroke-width="2.3" stroke-linecap="round"/>
   </g>`;
 }
 
