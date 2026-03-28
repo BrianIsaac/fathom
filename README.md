@@ -76,7 +76,6 @@ Open [http://localhost:3000](http://localhost:3000).
 | `SLACK_WEBHOOK_URL` | Slack incoming webhook for alerts |
 | `RESEND_API_KEY` | Resend API key for email alerts |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot token for alerts |
-| `GEMINI_API_KEY` | Google Gemini API key for fish sprite generation |
 
 Set `NEXT_PUBLIC_USE_MOCK_DATA=true` to run with pre-generated data (no API keys needed).
 
