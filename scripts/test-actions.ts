@@ -7,6 +7,9 @@ import { sendEmail } from '../lib/actions/email';
 import { dispatchActions } from '../lib/actions/dispatcher';
 import type { Agent } from '../lib/agents/types';
 
+const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? '0';
+const EMAIL = process.env.ALERT_EMAIL ?? 'alerts@example.com';
+
 const SAMPLE_DATA = {
   title: 'MAS Consultation Paper on Digital Payment Token Services',
   summary: 'New AML/CFT requirements for DPT providers. Comment deadline: 25 Apr 2026.',
@@ -28,7 +31,7 @@ async function testSlack() {
 async function testTelegram() {
   console.log('\n--- Test: sendTelegram ---');
   const result = await sendTelegram(
-    { chat_id: '348165044', template: '*Fathom Alert*\n{title}\n\n{summary}' },
+    { chat_id: CHAT_ID, template: '*Fathom Alert*\n{title}\n\n{summary}' },
     SAMPLE_DATA,
   );
   console.log('Result:', result);
@@ -39,13 +42,14 @@ async function testEmail() {
   console.log('\n--- Test: sendEmail ---');
   try {
     const result = await sendEmail(
-      { to: 'brian.isaac.kam@gmail.com', subject: 'Fathom Alert: {title}', template: '<h2>{title}</h2><p>{summary}</p>' },
+      { to: EMAIL, subject: 'Fathom Alert: {title}', template: '<h2>{title}</h2><p>{summary}</p>' },
       SAMPLE_DATA,
     );
     console.log('Result:', result);
     console.log('PASS:', result.success === true);
-  } catch (e: any) {
-    console.log('EXPECTED FAIL (domain not verified):', e.message ?? e);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.log('EXPECTED FAIL (domain not verified):', msg);
   }
 }
 
@@ -63,7 +67,7 @@ async function testTelegramBadToken() {
   console.log('\n--- Test: Telegram status check on bad token ---');
   const original = process.env.TELEGRAM_BOT_TOKEN;
   process.env.TELEGRAM_BOT_TOKEN = 'INVALID_TOKEN';
-  const result = await sendTelegram({ chat_id: '348165044', template: 'test' }, {});
+  const result = await sendTelegram({ chat_id: CHAT_ID, template: 'test' }, {});
   process.env.TELEGRAM_BOT_TOKEN = original;
   console.log('Result:', result);
   console.log('PASS (success=false):', result.success === false);
@@ -82,7 +86,7 @@ async function testDispatchActions() {
     },
     actions: [
       { type: 'slack', config: { template: '[dispatchActions test] {title}' } },
-      { type: 'telegram', config: { chat_id: '348165044', template: '[dispatchActions test] {title}' } },
+      { type: 'telegram', config: { chat_id: CHAT_ID, template: '[dispatchActions test] {title}' } },
     ],
     fish_config: { species: 'clownfish', colour: 'auto', accessory: 'none' },
     fish_sprite: '',
@@ -101,7 +105,7 @@ async function main() {
 
   const tests = [testSlack, testTelegram, testEmail, testSlackBadWebhook, testTelegramBadToken, testDispatchActions];
   for (const test of tests) {
-    try { await test(); } catch (e: any) { console.log('CRASHED:', e.message ?? e); }
+    try { await test(); } catch (e: unknown) { const msg = e instanceof Error ? e.message : String(e); console.log('CRASHED:', msg); }
   }
 
   console.log('\n=== All action tests complete ===');
