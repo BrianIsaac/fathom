@@ -115,13 +115,18 @@ export default function FathomPoolPage() {
             <Waves className="h-6 w-6" />
             Fathom Pool
           </h1>
-          <p className="text-muted-foreground">
-            {loading
-              ? 'Loading agents...'
-              : agents.length > 0
-                ? `${agents.filter(a => a.enabled).length} active agent${agents.filter(a => a.enabled).length !== 1 ? 's' : ''} monitoring`
-                : 'Deploy agents to start monitoring'}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-muted-foreground">
+              {loading
+                ? 'Loading agents...'
+                : agents.length > 0
+                  ? `${agents.filter(a => a.enabled).length} active agent${agents.filter(a => a.enabled).length !== 1 ? 's' : ''} monitoring`
+                  : 'Deploy agents to start monitoring'}
+            </p>
+            <span className="text-xs text-muted-foreground/60 border border-border/50 rounded-full px-2.5 py-0.5">
+              built with and for <a href="https://tinyfish.ai" target="_blank" rel="noopener noreferrer" className="font-medium text-muted-foreground hover:text-foreground transition-colors">TinyFish</a>
+            </span>
+          </div>
         </div>
         {agents.length > 0 && (
           <Button onClick={triggerAgents} disabled={triggering} variant="outline">
@@ -146,22 +151,20 @@ export default function FathomPoolPage() {
             <EmptyPool />
           ) : (
             agents.map(agent => (
-              <div key={agent.id} className="contents">
-                <FishSpriteComponent
-                  agent={agent}
-                  bowlWidth={bowlSize.width}
-                  bowlHeight={bowlSize.height}
-                />
+              <FishSpriteComponent
+                key={agent.id}
+                agent={agent}
+                bowlWidth={bowlSize.width}
+                bowlHeight={bowlSize.height}
+              >
                 {activeBubbles
                   .filter(b => b.agent_id === agent.id)
                   .slice(0, 1)
                   .map(b => (
-                    <div key={b.timestamp} className="absolute z-50" style={{ left: '50%', top: '20%' }}>
-                      <ActionBubble action={b} onDismiss={() => dismissBubble(b.timestamp)} />
-                    </div>
+                    <ActionBubble key={b.timestamp} action={b} onDismiss={() => dismissBubble(b.timestamp)} />
                   ))
                 }
-              </div>
+              </FishSpriteComponent>
             ))
           )}
         </FishBowl>

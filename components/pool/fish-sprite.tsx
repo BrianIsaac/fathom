@@ -9,10 +9,11 @@ function seedRandom(id: string) {
   return Math.abs(hash);
 }
 
-export function FishSpriteComponent({ agent, bowlWidth, bowlHeight }: {
+export function FishSpriteComponent({ agent, bowlWidth, bowlHeight, children }: {
   agent: Agent;
   bowlWidth: number;
   bowlHeight: number;
+  children?: React.ReactNode;
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -148,6 +149,7 @@ export function FishSpriteComponent({ agent, bowlWidth, bowlHeight }: {
         <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-medium text-white/90 dark:text-white/70 whitespace-nowrap pointer-events-none" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
           {agent.name}
         </span>
+        {children}
       </div>
       {showTooltip && (() => {
         const TOOLTIP_W = 264;
