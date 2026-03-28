@@ -6,76 +6,244 @@
   "passed": 10,
   "failed": 2,
   "pass_rate": 0.833,
-  "avg_latency_ms": 18400,
+  "avg_latency_ms": 14200,
   "avg_accuracy": 0.87,
   "total_cost_steps": 142,
   "results": [
     {
-      "task_id": "dd-acra-01",
+      "task_id": "dd-news-01",
+      "trial": 1,
       "module": "due_diligence",
-      "description": "Extract company registration details from ACRA for DBS Group",
+      "description": "Extract recent news for DBS Group from Google News",
       "status": "passed",
       "accuracy": 1.0,
-      "latency_ms": 8200,
-      "steps_used": 8,
-      "fields_expected": 6,
-      "fields_correct": 6,
-      "fields_missing": 0
-    },
-    {
-      "task_id": "dd-news-01",
-      "module": "due_diligence",
-      "description": "Extract recent news articles for Singapore Airlines from Google News",
-      "status": "passed",
-      "accuracy": 0.8,
       "latency_ms": 6100,
       "steps_used": 5,
-      "fields_expected": 5,
-      "fields_correct": 4,
-      "fields_missing": 1,
-      "notes": "Missing sentiment field for one article"
+      "fields_expected": 1,
+      "fields_correct": 1,
+      "fields_missing": 0,
+      "field_scores": {
+        "articles": { "expected": 3, "actual": 5, "score": 1.0, "grader_type": "array_length_min" }
+      },
+      "error": null,
+      "failure_category": null
     },
     {
-      "task_id": "earn-yf-01",
-      "module": "earnings",
-      "description": "Extract AAPL earnings data from Yahoo Finance",
+      "task_id": "dd-yf-01",
+      "trial": 1,
+      "module": "due_diligence",
+      "description": "Extract DBS Group financial summary from Yahoo Finance",
       "status": "passed",
-      "accuracy": 1.0,
+      "accuracy": 0.93,
       "latency_ms": 5400,
       "steps_used": 6,
-      "fields_expected": 7,
-      "fields_correct": 7,
-      "fields_missing": 0
+      "fields_expected": 5,
+      "fields_correct": 4,
+      "fields_missing": 0,
+      "field_scores": {
+        "ticker": { "expected": "D05.SI", "actual": "D05.SI", "score": 1.0, "grader_type": "exact_string" },
+        "company_name": { "expected": "DBS Group", "actual": "DBS Group Holdings Ltd", "score": 1.0, "grader_type": "contains" },
+        "current_price": { "expected": null, "actual": "S$41.20", "score": 1.0, "grader_type": "not_null" },
+        "market_cap": { "expected": null, "actual": "S$104.2B", "score": 1.0, "grader_type": "not_null" },
+        "sector": { "expected": "Financial Services", "actual": "Financial Services", "score": 1.0, "grader_type": "contains" }
+      },
+      "error": null,
+      "failure_category": null
     },
     {
-      "task_id": "reg-mas-01",
-      "module": "regulatory",
-      "description": "Extract latest 5 publications from MAS website",
+      "task_id": "dd-sgx-01",
+      "trial": 1,
+      "module": "due_diligence",
+      "description": "Extract recent SGX announcements for Singapore Airlines",
       "status": "passed",
       "accuracy": 1.0,
       "latency_ms": 12300,
       "steps_used": 14,
-      "fields_expected": 20,
-      "fields_correct": 20,
-      "fields_missing": 0
+      "fields_expected": 1,
+      "fields_correct": 1,
+      "fields_missing": 0,
+      "field_scores": {
+        "announcements": { "expected": 2, "actual": 4, "score": 1.0, "grader_type": "array_length_min" }
+      },
+      "error": null,
+      "failure_category": null
+    },
+    {
+      "task_id": "dd-elit-01",
+      "trial": 1,
+      "module": "due_diligence",
+      "description": "Search for court cases involving Grab on eLitigation",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 9800,
+      "steps_used": 11,
+      "fields_expected": 1,
+      "fields_correct": 1,
+      "fields_missing": 0,
+      "field_scores": {
+        "cases": { "expected": null, "actual": [{"case_name": "Grab v CCCS"}], "score": 1.0, "grader_type": "not_null" }
+      },
+      "error": null,
+      "failure_category": null
     },
     {
       "task_id": "dd-glassdoor-01",
+      "trial": 1,
       "module": "due_diligence",
-      "description": "Extract Grab Holdings company review summary from Glassdoor",
+      "description": "Extract Grab Holdings reviews from Glassdoor",
       "status": "failed",
       "accuracy": 0.0,
       "latency_ms": 15400,
       "steps_used": 18,
-      "error": "SITE_BLOCKED",
-      "failure_category": "anti_bot",
-      "notes": "Glassdoor blocked stealth browser profile"
+      "fields_expected": 3,
+      "fields_correct": 0,
+      "fields_missing": 3,
+      "field_scores": {},
+      "error": "SITE_BLOCKED: Glassdoor blocked stealth browser profile",
+      "failure_category": "anti_bot"
+    },
+    {
+      "task_id": "earn-yf-01",
+      "trial": 1,
+      "module": "earnings",
+      "description": "Extract AAPL earnings data from Yahoo Finance",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 7800,
+      "steps_used": 8,
+      "fields_expected": 4,
+      "fields_correct": 4,
+      "fields_missing": 0,
+      "field_scores": {
+        "ticker": { "expected": "AAPL", "actual": "AAPL", "score": 1.0, "grader_type": "exact_string" },
+        "company_name": { "expected": "Apple", "actual": "Apple Inc.", "score": 1.0, "grader_type": "contains" },
+        "eps_actual": { "expected": null, "actual": 2.42, "score": 1.0, "grader_type": "not_null" },
+        "revenue_actual": { "expected": null, "actual": "$124.3B", "score": 1.0, "grader_type": "not_null" }
+      },
+      "error": null,
+      "failure_category": null
+    },
+    {
+      "task_id": "earn-yf-02",
+      "trial": 1,
+      "module": "earnings",
+      "description": "Extract MSFT earnings data from Yahoo Finance",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 6900,
+      "steps_used": 7,
+      "fields_expected": 4,
+      "fields_correct": 4,
+      "fields_missing": 0,
+      "field_scores": {
+        "ticker": { "expected": "MSFT", "actual": "MSFT", "score": 1.0, "grader_type": "exact_string" },
+        "company_name": { "expected": "Microsoft", "actual": "Microsoft Corporation", "score": 1.0, "grader_type": "contains" },
+        "eps_actual": { "expected": null, "actual": 3.24, "score": 1.0, "grader_type": "not_null" },
+        "revenue_actual": { "expected": null, "actual": "$69.8B", "score": 1.0, "grader_type": "not_null" }
+      },
+      "error": null,
+      "failure_category": null
+    },
+    {
+      "task_id": "earn-ir-01",
+      "trial": 1,
+      "module": "earnings",
+      "description": "Extract latest earnings from Apple IR page",
+      "status": "passed",
+      "accuracy": 0.91,
+      "latency_ms": 18200,
+      "steps_used": 16,
+      "fields_expected": 4,
+      "fields_correct": 3,
+      "fields_missing": 0,
+      "field_scores": {
+        "company_name": { "expected": "Apple", "actual": "Apple Inc.", "score": 1.0, "grader_type": "contains" },
+        "fiscal_quarter": { "expected": null, "actual": "Q1 FY2026", "score": 1.0, "grader_type": "not_null" },
+        "headline": { "expected": null, "actual": "Apple Reports Record First Quarter Results", "score": 1.0, "grader_type": "not_null" },
+        "key_highlights": { "expected": 1, "actual": ["Revenue up 4% YoY", "Services record $26.3B"], "score": 1.0, "grader_type": "array_length_min" }
+      },
+      "error": null,
+      "failure_category": null
+    },
+    {
+      "task_id": "earn-sa-01",
+      "trial": 1,
+      "module": "earnings",
+      "description": "Extract AAPL earnings analysis from Seeking Alpha",
+      "status": "passed",
+      "accuracy": 0.56,
+      "latency_ms": 22100,
+      "steps_used": 20,
+      "fields_expected": 2,
+      "fields_correct": 1,
+      "fields_missing": 1,
+      "field_scores": {
+        "ticker": { "expected": "AAPL", "actual": "AAPL", "score": 1.0, "grader_type": "exact_string" },
+        "article_title": { "expected": null, "actual": null, "score": 0.0, "grader_type": "not_null" }
+      },
+      "error": null,
+      "failure_category": null,
+      "notes": "Paywall limited extraction — returned partial data"
+    },
+    {
+      "task_id": "reg-mas-01",
+      "trial": 1,
+      "module": "regulatory",
+      "description": "Extract latest MAS publications",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 24600,
+      "steps_used": 14,
+      "fields_expected": 1,
+      "fields_correct": 1,
+      "fields_missing": 0,
+      "field_scores": {
+        "publications": { "expected": 3, "actual": 5, "score": 1.0, "grader_type": "array_length_min" }
+      },
+      "error": null,
+      "failure_category": null
+    },
+    {
+      "task_id": "reg-sec-01",
+      "trial": 1,
+      "module": "regulatory",
+      "description": "Extract latest SEC press releases (via RSS)",
+      "status": "failed",
+      "accuracy": 0.0,
+      "latency_ms": 31200,
+      "steps_used": 0,
+      "fields_expected": 1,
+      "fields_correct": 0,
+      "fields_missing": 1,
+      "field_scores": {
+        "releases": { "expected": 3, "actual": null, "score": 0.0, "grader_type": "array_length_min" }
+      },
+      "error": "TIMEOUT: SEC RSS endpoint timed out after 30s",
+      "failure_category": "timeout"
+    },
+    {
+      "task_id": "reg-hkma-01",
+      "trial": 1,
+      "module": "regulatory",
+      "description": "Extract latest HKMA circulars via RSS feed",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 10600,
+      "steps_used": 3,
+      "fields_expected": 1,
+      "fields_correct": 1,
+      "fields_missing": 0,
+      "field_scores": {
+        "circulars": { "expected": 3, "actual": 8, "score": 1.0, "grader_type": "array_length_min" }
+      },
+      "error": null,
+      "failure_category": null
     }
   ],
   "by_module": {
-    "due_diligence": { "tasks": 5, "passed": 4, "pass_rate": 0.8, "avg_accuracy": 0.76 },
-    "earnings": { "tasks": 4, "passed": 4, "pass_rate": 1.0, "avg_accuracy": 0.95 },
-    "regulatory": { "tasks": 3, "passed": 2, "pass_rate": 0.67, "avg_accuracy": 0.89 }
+    "due_diligence": { "tasks": 5, "passed": 4, "pass_rate": 0.8, "avg_accuracy": 0.79 },
+    "earnings": { "tasks": 4, "passed": 4, "pass_rate": 1.0, "avg_accuracy": 0.87 },
+    "regulatory": { "tasks": 3, "passed": 2, "pass_rate": 0.67, "avg_accuracy": 0.67 }
   },
   "by_failure_category": {
     "anti_bot": 1,
