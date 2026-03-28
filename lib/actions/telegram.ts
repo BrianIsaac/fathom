@@ -25,9 +25,9 @@ export async function sendTelegram(
     }),
   });
 
-  if (!response.ok) {
-    const body = await response.text().catch(() => 'unknown');
-    return { action_type: 'telegram', success: false, error: `HTTP ${response.status}: ${body}`, timestamp: new Date().toISOString() };
+  const body = await response.json().catch(() => ({ ok: false, description: 'Failed to parse response' }));
+  if (!body.ok) {
+    return { action_type: 'telegram', success: false, error: body.description ?? 'Telegram API error', timestamp: new Date().toISOString() };
   }
 
   return { action_type: 'telegram', success: true, error: null, timestamp: new Date().toISOString() };

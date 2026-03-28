@@ -20,7 +20,6 @@ export async function sendSlackMessage(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       text: formatTemplate(config.template ?? '{title}', data),
-      channel: config.channel,
     }),
   });
 
