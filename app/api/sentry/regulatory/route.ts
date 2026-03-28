@@ -4,6 +4,10 @@ import { REGULATORY_SOURCES } from '@/lib/tinyfish/sources/regulatory';
 import { createMultiplexedResponse } from '@/lib/tinyfish/multiplexer';
 import { normalisePublications } from '@/lib/regulatory/normalise';
 import { fetchRSSSources, type NormalisedPublication } from '@/lib/regulatory/rss-sources';
+import { synthesiseRegulatory } from '@/lib/openai/synthesise';
+import { listAgents, logAgentAction, updateAgent } from '@/lib/agents/store';
+import { evaluateAgent } from '@/lib/agents/engine';
+import { dispatchActions } from '@/lib/actions/dispatcher';
 import { isMockMode, fetchOrMock } from '@/lib/data';
 
 export const maxDuration = 120;
@@ -39,6 +43,36 @@ export async function GET() {
 
   const changed = results.filter(r => r.change_detected);
   const errors = results.filter(r => r.error !== null);
+
+  // Evaluate agents against changed sources
+  if (changed.length > 0) {
+    const agents = await listAgents();
+    const regulatoryAgents = agents.filter(a => a.module === 'regulatory' && a.enabled);
+
+    for (const result of changed) {
+      const facts: Record<string, unknown> = {
+        source: result.source_id,
+        change_detected: true,
+        tier_reached: result.tier_reached,
+      };
+      for (const agent of regulatoryAgents) {
+        if (evaluateAgent(agent, facts)) {
+          const actionResults = await dispatchActions(agent, facts);
+          for (const ar of actionResults) {
+            await logAgentAction({
+              agent_id: agent.id,
+              agent_name: agent.name,
+              action_type: ar.action_type,
+              target: ar.action_type === 'slack' ? '#channel' : ar.action_type,
+              timestamp: ar.timestamp,
+              detail: `${ar.success ? 'Sent' : 'Failed'}: change on ${result.source_id}`,
+            });
+          }
+          await updateAgent(agent.id, { last_triggered: new Date().toISOString() });
+        }
+      }
+    }
+  }
 
   return NextResponse.json({
     checked_at: new Date().toISOString(),
@@ -156,16 +190,43 @@ export async function POST(req: Request) {
       const rssPubs = await fetchRSSSources(jurisdictions, skipRssIds);
       const allPubs = [...tinyfishPubs, ...rssPubs];
 
+      let synthesis: { urgent_actions: string[]; monitoring_items: string[]; informational: string[] } = { urgent_actions: [], monitoring_items: [], informational: [] };
+      try {
+        const pubRecords = allPubs.map(p => ({ ...p }) as unknown as Record<string, unknown>);
+        synthesis = await synthesiseRegulatory(businessDomains, pubRecords) as typeof synthesis;
+      } catch {
+        // GPT synthesis failed — continue with empty synthesis
+      }
+
+      const agents = await listAgents();
+      const regulatoryAgents = agents.filter(a => a.module === 'regulatory' && a.enabled);
+
+      for (const pub of allPubs) {
+        const facts = pub as unknown as Record<string, unknown>;
+        for (const agent of regulatoryAgents) {
+          if (evaluateAgent(agent, facts)) {
+            const actionResults = await dispatchActions(agent, facts);
+            for (const ar of actionResults) {
+              await logAgentAction({
+                agent_id: agent.id,
+                agent_name: agent.name,
+                action_type: ar.action_type,
+                target: ar.action_type === 'slack' ? '#channel' : ar.action_type,
+                timestamp: ar.timestamp,
+                detail: `${ar.success ? 'Sent' : 'Failed'}: ${String(facts.title ?? 'publication')}`,
+              });
+            }
+            await updateAgent(agent.id, { last_triggered: new Date().toISOString() });
+          }
+        }
+      }
+
       return {
         generated_at: new Date().toISOString(),
         business_domains: businessDomains,
         publications_found: allPubs.length,
         publications: allPubs,
-        synthesis: {
-          urgent_actions: [],
-          monitoring_items: [],
-          informational: [],
-        },
+        synthesis,
       };
     },
   });
