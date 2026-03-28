@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import Link from 'next/link';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/shared/app-sidebar';
@@ -41,6 +42,12 @@ export default function RootLayout({
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <div className="flex-1" />
+                <Link
+                  href="/guide"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors mr-2"
+                >
+                  Introduction &amp; Guide
+                </Link>
                 <ThemeToggle />
               </header>
               <main className="flex-1 p-6">
