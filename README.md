@@ -45,7 +45,7 @@ Agents are persistent monitors with configurable conditions and actions. Each ag
 | Layer | Technology |
 |-------|-----------|
 | Web Agents | TinyFish Web Agent API (SSE streaming) |
-| LLM Synthesis | Vercel AI SDK + OpenAI GPT-4o |
+| LLM Synthesis | Vercel AI SDK + OpenAI GPT-5.4 |
 | Framework | Next.js 16 App Router, React 19 |
 | UI | shadcn/ui + Base UI + Tailwind CSS v4 |
 | Charts | Recharts v3 |

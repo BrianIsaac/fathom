@@ -18,7 +18,7 @@ import type { ParallelResult } from '../tinyfish/types';
 export async function synthesise<T>(
   systemPrompt: string,
   userPrompt: string,
-  model: string = 'gpt-4o-mini',
+  model: string = 'gpt-5.4-mini',
 ): Promise<T> {
   const { text } = await generateText({
     model: openai(model),
@@ -55,7 +55,7 @@ export async function synthesiseDD(
   return synthesise<DDSynthesis>(
     'You are a financial due diligence analyst. Respond only with valid JSON matching the specified schema.',
     prompt,
-    'gpt-4o',
+    'gpt-5.4',
   );
 }
 
@@ -80,7 +80,7 @@ export async function synthesiseEarnings(
   return synthesise(
     'You are a financial analyst. Respond only with valid JSON matching the specified schema.',
     prompt,
-    'gpt-4o-mini',
+    'gpt-5.4-mini',
   );
 }
 
@@ -105,6 +105,6 @@ export async function synthesiseRegulatory(
   return synthesise(
     'You are a regulatory affairs analyst. Respond only with valid JSON matching the specified schema.',
     prompt,
-    'gpt-4o',
+    'gpt-5.4',
   );
 }
