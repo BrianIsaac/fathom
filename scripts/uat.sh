@@ -173,7 +173,7 @@ SENTRY_GET=$(curl -s "$BASE/api/sentry/regulatory")
 check_json "Sentry GET has publications" "$SENTRY_GET" "d.get('publications_found', 0) > 0"
 
 EVAL_GET=$(curl -s "$BASE/api/eval/scheduled")
-check_json "Eval has 12 tasks" "$EVAL_GET" "d.get('total_tasks') == 12"
+check_json "Eval has 15 tasks" "$EVAL_GET" "d.get('total_tasks') == 15"
 
 # ─── REAL MODE: ADDITIONAL CHECKS ────────────────────────────
 if $REAL_MODE; then

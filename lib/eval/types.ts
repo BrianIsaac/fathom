@@ -34,7 +34,7 @@ export const FieldGraderSchema = z.discriminatedUnion('type', [
 
 export const EvalTaskSchema = z.object({
   task_id: z.string(),
-  module: z.enum(['due_diligence', 'earnings', 'regulatory']),
+  module: z.enum(['due_diligence', 'earnings', 'regulatory', 'cyber']),
   description: z.string(),
   difficulty: z.enum(['easy', 'medium', 'hard']),
   tinyfish_config: z.object({

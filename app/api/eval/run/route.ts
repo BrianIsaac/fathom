@@ -23,7 +23,7 @@ export async function POST() {
         await writer.write(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       };
 
-      await send({ type: 'STARTED', mock: true, total_tasks: 12 });
+      await send({ type: 'STARTED', mock: true, total_tasks: mockResults.length });
 
       for (const task of mockResults) {
         await send({ type: 'TASK_STARTED', task_id: task.task_id });

@@ -205,8 +205,64 @@ const REGULATORY_TASKS: EvalTask[] = [
   },
 ];
 
+const CYBER_TASKS: EvalTask[] = [
+  {
+    task_id: 'cyber-headers-01',
+    module: 'cyber',
+    description: 'Detect missing security headers on OWASP Juice Shop',
+    difficulty: 'easy',
+    tinyfish_config: {
+      url: 'https://preview.owasp-juice.shop',
+      goal: 'Check the HTTP response headers of this site. Report which security headers are missing from: Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options, Content-Security-Policy, Permissions-Policy, Referrer-Policy. Return JSON: {"missing_headers": string[], "present_headers": string[], "vulnerable": boolean}',
+      browser_profile: 'stealth',
+    },
+    expected_output: { vulnerable: true, missing_headers_min: 2 },
+    graders: {
+      'vulnerable': { type: 'exact_string', case_sensitive: false, weight: 1.0 },
+      'missing_headers': { type: 'array_length_min', min: 2, weight: 1.0 },
+    },
+    pass_threshold: 0.8,
+  },
+  {
+    task_id: 'cyber-idor-01',
+    module: 'cyber',
+    description: 'Identify IDOR vulnerability on Juice Shop user API',
+    difficulty: 'hard',
+    tinyfish_config: {
+      url: 'https://preview.owasp-juice.shop',
+      goal: 'Register a test account, then try accessing /api/Users/1 and /rest/basket/2 with your auth token. Report if you can access other users data. Return JSON: {"vulnerable": boolean, "endpoints_tested": string[], "accessible_endpoints": string[], "category": string}',
+      browser_profile: 'stealth',
+    },
+    expected_output: { vulnerable: true, category: 'A01-BrokenAccessControl' },
+    graders: {
+      'vulnerable': { type: 'exact_string', case_sensitive: false, weight: 1.0 },
+      'category': { type: 'contains', weight: 0.5 },
+      'endpoints_tested': { type: 'array_length_min', min: 1, weight: 0.5 },
+    },
+    pass_threshold: 0.7,
+  },
+  {
+    task_id: 'cyber-outdated-01',
+    module: 'cyber',
+    description: 'Detect outdated frontend libraries on Juice Shop',
+    difficulty: 'medium',
+    tinyfish_config: {
+      url: 'https://preview.owasp-juice.shop',
+      goal: 'Inspect the page source and loaded scripts to find outdated JavaScript libraries (Angular, jQuery, etc). For each, report the version found. Return JSON: {"libraries": [{"name": string, "version": string, "outdated": boolean}], "vulnerable": boolean}',
+      browser_profile: 'lite',
+    },
+    expected_output: { vulnerable: true, libraries_min: 1 },
+    graders: {
+      'vulnerable': { type: 'exact_string', case_sensitive: false, weight: 1.0 },
+      'libraries': { type: 'array_length_min', min: 1, weight: 1.0 },
+    },
+    pass_threshold: 0.8,
+  },
+];
+
 export const ALL_EVAL_TASKS: EvalTask[] = [
   ...DD_TASKS,
   ...EARNINGS_TASKS,
   ...REGULATORY_TASKS,
+  ...CYBER_TASKS,
 ];
