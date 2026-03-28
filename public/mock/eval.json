@@ -1,0 +1,86 @@
+{
+  "eval_run_id": "eval_20260328_0630",
+  "generated_at": "2026-03-28T06:30:00Z",
+  "total_tasks": 12,
+  "total_trials": 12,
+  "passed": 10,
+  "failed": 2,
+  "pass_rate": 0.833,
+  "avg_latency_ms": 18400,
+  "avg_accuracy": 0.87,
+  "total_cost_steps": 142,
+  "results": [
+    {
+      "task_id": "dd-acra-01",
+      "module": "due_diligence",
+      "description": "Extract company registration details from ACRA for DBS Group",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 8200,
+      "steps_used": 8,
+      "fields_expected": 6,
+      "fields_correct": 6,
+      "fields_missing": 0
+    },
+    {
+      "task_id": "dd-news-01",
+      "module": "due_diligence",
+      "description": "Extract recent news articles for Singapore Airlines from Google News",
+      "status": "passed",
+      "accuracy": 0.8,
+      "latency_ms": 6100,
+      "steps_used": 5,
+      "fields_expected": 5,
+      "fields_correct": 4,
+      "fields_missing": 1,
+      "notes": "Missing sentiment field for one article"
+    },
+    {
+      "task_id": "earn-yf-01",
+      "module": "earnings",
+      "description": "Extract AAPL earnings data from Yahoo Finance",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 5400,
+      "steps_used": 6,
+      "fields_expected": 7,
+      "fields_correct": 7,
+      "fields_missing": 0
+    },
+    {
+      "task_id": "reg-mas-01",
+      "module": "regulatory",
+      "description": "Extract latest 5 publications from MAS website",
+      "status": "passed",
+      "accuracy": 1.0,
+      "latency_ms": 12300,
+      "steps_used": 14,
+      "fields_expected": 20,
+      "fields_correct": 20,
+      "fields_missing": 0
+    },
+    {
+      "task_id": "dd-glassdoor-01",
+      "module": "due_diligence",
+      "description": "Extract Grab Holdings company review summary from Glassdoor",
+      "status": "failed",
+      "accuracy": 0.0,
+      "latency_ms": 15400,
+      "steps_used": 18,
+      "error": "SITE_BLOCKED",
+      "failure_category": "anti_bot",
+      "notes": "Glassdoor blocked stealth browser profile"
+    }
+  ],
+  "by_module": {
+    "due_diligence": { "tasks": 5, "passed": 4, "pass_rate": 0.8, "avg_accuracy": 0.76 },
+    "earnings": { "tasks": 4, "passed": 4, "pass_rate": 1.0, "avg_accuracy": 0.95 },
+    "regulatory": { "tasks": 3, "passed": 2, "pass_rate": 0.67, "avg_accuracy": 0.89 }
+  },
+  "by_failure_category": {
+    "anti_bot": 1,
+    "timeout": 1,
+    "extraction_error": 0,
+    "site_changed": 0
+  }
+}

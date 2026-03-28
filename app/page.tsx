@@ -1,65 +1,197 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { Agent, AgentAction } from '@/lib/agents/types';
+import { FishBowl } from '@/components/pool/fish-bowl';
+import { FishSpriteComponent } from '@/components/pool/fish-sprite';
+import { EmptyPool } from '@/components/pool/empty-pool';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ErrorCard } from '@/components/shared/error-card';
+import { Waves, Zap } from 'lucide-react';
+
+export default function FathomPoolPage() {
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [activity, setActivity] = useState<AgentAction[]>([]);
+  const [mounted, setMounted] = useState(false);
+  const [bowlSize, setBowlSize] = useState({ width: 800, height: 420 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [triggering, setTriggering] = useState(false);
+  const [triggerResult, setTriggerResult] = useState<{ agents_matched: number; results: Array<{ agent: string; matched: boolean; actions_fired: string[] }> } | null>(null);
+  const bowlRef = useRef<HTMLDivElement>(null);
+
+  const loadAgents = useCallback(async () => {
+    try {
+      setError(null);
+      const res = await fetch('/api/agents');
+      if (!res.ok) throw new Error(`Failed to load agents (${res.status})`);
+      setAgents(await res.json());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load agents');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const loadActivity = useCallback(async () => {
+    try {
+      const res = await fetch('/api/agents/activity');
+      if (res.ok) setActivity(await res.json());
+    } catch {
+      // Activity polling failure is non-critical
+    }
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
+    loadAgents();
+    loadActivity();
+    const interval = setInterval(loadActivity, 10000);
+
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const measureBowl = () => {
+      if (bowlRef.current) {
+        const w = bowlRef.current.offsetWidth;
+        const h = bowlRef.current.offsetHeight;
+        setBowlSize(prev => (prev.width === w && prev.height === h) ? prev : { width: w, height: h });
+      }
+    };
+    const debouncedMeasure = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measureBowl, 150);
+    };
+    measureBowl();
+    window.addEventListener('resize', debouncedMeasure);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', debouncedMeasure);
+    };
+  }, [loadAgents, loadActivity]);
+
+  const triggerAgents = async () => {
+    try {
+      setTriggering(true);
+      setTriggerResult(null);
+      const res = await fetch('/api/agents/trigger', { method: 'POST' });
+      if (!res.ok) throw new Error(`Trigger failed (${res.status})`);
+      const data = await res.json();
+      setTriggerResult(data);
+      loadAgents();
+      loadActivity();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Trigger failed');
+    } finally {
+      setTriggering(false);
+    }
+  };
+
+  if (!mounted) return null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Waves className="h-6 w-6" />
+            Fathom Pool
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-muted-foreground">
+            {loading
+              ? 'Loading agents...'
+              : agents.length > 0
+                ? `${agents.filter(a => a.enabled).length} active agent${agents.filter(a => a.enabled).length !== 1 ? 's' : ''} monitoring`
+                : 'Deploy agents to start monitoring'}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        {agents.length > 0 && (
+          <Button onClick={triggerAgents} disabled={triggering} variant="outline">
+            <Zap className="mr-2 h-4 w-4" />
+            {triggering ? 'Triggering...' : 'Test Trigger'}
+          </Button>
+        )}
+      </div>
+
+      {error && <ErrorCard message={error} onRetry={loadAgents} />}
+
+      {loading ? (
+        <div className="space-y-4">
+          <Skeleton className="h-[420px] w-full rounded-2xl" />
+          <Skeleton className="h-32 w-full" />
         </div>
-      </main>
+      ) : !error && (
+      <>
+      <div ref={bowlRef}>
+        <FishBowl>
+          {agents.length === 0 ? (
+            <EmptyPool />
+          ) : (
+            agents.map(agent => (
+              <FishSpriteComponent
+                key={agent.id}
+                agent={agent}
+                bowlWidth={bowlSize.width}
+                bowlHeight={bowlSize.height}
+              />
+            ))
+          )}
+        </FishBowl>
+      </div>
+
+      {triggerResult && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">
+              Trigger Result — {triggerResult.agents_matched} agent{triggerResult.agents_matched !== 1 ? 's' : ''} matched
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {triggerResult.results.map((r, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm">
+                  <Badge variant={r.matched ? 'default' : 'secondary'}>
+                    {r.matched ? 'Matched' : 'No match'}
+                  </Badge>
+                  <span className="font-medium">{r.agent}</span>
+                  {r.actions_fired.length > 0 && (
+                    <span className="text-muted-foreground">
+                      — {r.actions_fired.join(', ')}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {activity.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {activity.map((action, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm">
+                  <span className="text-xs text-muted-foreground w-20 shrink-0">
+                    {new Date(action.timestamp).toLocaleTimeString()}
+                  </span>
+                  <Badge variant="outline" className="text-xs">{action.agent_name}</Badge>
+                  <Badge variant="secondary" className="text-xs">{action.action_type}</Badge>
+                  <span className="text-muted-foreground truncate">{action.detail}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      </>
+      )}
     </div>
   );
 }

@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-03-28T07:00:00Z",
+  "regulators_queried": 6,
+  "regulators_returned": 5,
+  "publications_found": 8,
+  "high_relevance": 3,
+  "scan_latency_ms": 52100,
+  "publications": [
+    {
+      "title": "Consultation Paper on Regulatory Framework for Digital Payment Token Services",
+      "regulator": "MAS",
+      "jurisdiction": "SG",
+      "date": "2026-03-26",
+      "document_type": "Consultation Paper",
+      "url": "https://www.mas.gov.sg/...",
+      "relevance_score": 9,
+      "affected_domains": ["digital payments", "retail FX"],
+      "comment_deadline": "2026-04-25",
+      "summary": "MAS proposes enhanced AML/CFT requirements for digital payment token service providers, including stricter customer due diligence for cross-border transactions exceeding $5,000."
+    },
+    {
+      "title": "Circular on Insurance Distribution Channel Requirements",
+      "regulator": "MAS",
+      "jurisdiction": "SG",
+      "date": "2026-03-24",
+      "document_type": "Circular",
+      "url": "https://www.mas.gov.sg/...",
+      "relevance_score": 7,
+      "affected_domains": ["insurance"],
+      "comment_deadline": null,
+      "summary": "Updated requirements for digital insurance distribution channels, effective 1 July 2026. Requires enhanced disclosure for bundled products sold through non-traditional channels."
+    },
+    {
+      "title": "SEC Charges Three Firms for Unregistered Crypto Trading",
+      "regulator": "SEC",
+      "jurisdiction": "US",
+      "date": "2026-03-25",
+      "document_type": "Enforcement Action",
+      "url": "https://www.sec.gov/...",
+      "relevance_score": 5,
+      "affected_domains": ["digital payments"],
+      "comment_deadline": null,
+      "summary": "SEC enforcement against three firms operating unregistered digital asset exchanges. Signals continued aggressive posture on crypto intermediaries."
+    },
+    {
+      "title": "HKMA Guideline on AI in Customer-Facing Financial Services",
+      "regulator": "HKMA",
+      "jurisdiction": "HK",
+      "date": "2026-03-23",
+      "document_type": "Guideline",
+      "url": "https://www.hkma.gov.hk/...",
+      "relevance_score": 6,
+      "affected_domains": ["retail FX", "digital payments", "insurance"],
+      "comment_deadline": "2026-05-23",
+      "summary": "New guidelines requiring explainability and human oversight for AI systems used in customer-facing financial services, including automated advisory and claims processing."
+    },
+    {
+      "title": "FCA Policy Statement: Strengthening Financial Promotions Rules for High-Risk Investments",
+      "regulator": "FCA",
+      "jurisdiction": "UK",
+      "date": "2026-03-21",
+      "document_type": "Policy Statement",
+      "url": "https://www.fca.org.uk/...",
+      "relevance_score": 4,
+      "affected_domains": ["retail FX"],
+      "comment_deadline": null,
+      "summary": "FCA finalises rules tightening marketing requirements for high-risk investment products including leveraged FX. Effective 1 September 2026."
+    }
+  ],
+  "synthesis": {
+    "urgent_actions": [
+      "MAS DPT consultation paper — 30-day comment window, directly impacts digital payments and retail FX operations",
+      "MAS insurance circular — 1 July 2026 effective date, requires distribution channel compliance review"
+    ],
+    "monitoring_items": [
+      "HKMA AI guidelines — 60-day consultation, broad applicability across all business domains",
+      "FCA promotions rules — September 2026 deadline, review FX marketing materials"
+    ],
+    "informational": [
+      "SEC crypto enforcement — no direct action required, maintain watching brief on US regulatory posture"
+    ]
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "company": "Grab Holdings Ltd",
+  "jurisdiction": "SG",
+  "generated_at": "2026-03-28T07:00:00Z",
+  "sources_queried": 5,
+  "sources_returned": 5,
+  "sources_failed": 0,
+  "extraction_latency_ms": 42300,
+  "sources": {
+    "acra_csv": {
+      "status": "success",
+      "latency_ms": 50,
+      "data": {
+        "uen": "201224024R",
+        "company_name": "GRAB HOLDINGS LIMITED",
+        "registration_date": "2012-06-06",
+        "company_type": "Public Company Limited by Shares",
+        "status": "Live",
+        "principal_activities": "Investment holding",
+        "registered_address": "3 Media Close, #01-03/06, Singapore 138498"
+      }
+    },
+    "google_news": {
+      "status": "success",
+      "latency_ms": 6100,
+      "data": {
+        "articles": [
+          {
+            "title": "Grab reports record Q4 revenue, raises 2026 guidance",
+            "source": "Reuters",
+            "date": "2026-02-20",
+            "url": "https://www.reuters.com/...",
+            "sentiment": "positive"
+          },
+          {
+            "title": "Grab expands financial services arm into Malaysia lending",
+            "source": "Bloomberg",
+            "date": "2026-03-15",
+            "url": "https://www.bloomberg.com/...",
+            "sentiment": "positive"
+          },
+          {
+            "title": "Singapore MAS reviews super-app payment licence conditions",
+            "source": "The Straits Times",
+            "date": "2026-03-22",
+            "url": "https://www.straitstimes.com/...",
+            "sentiment": "neutral"
+          }
+        ]
+      }
+    },
+    "glassdoor": {
+      "status": "success",
+      "latency_ms": 12400,
+      "data": {
+        "overall_rating": 3.8,
+        "total_reviews": 2340,
+        "recommend_to_friend": "72%",
+        "ceo_approval": "78%",
+        "recent_sentiment": "Mixed — recurring themes: fast-paced culture, concerns about work-life balance post-IPO"
+      }
+    },
+    "yahoo_finance": {
+      "status": "success",
+      "latency_ms": 5200,
+      "data": {
+        "ticker": "GRAB",
+        "exchange": "NASDAQ",
+        "market_cap": "$18.2B",
+        "pe_ratio": 42.1,
+        "52_week_range": "$3.12 - $5.89",
+        "current_price": "$5.42",
+        "avg_volume": "12.4M"
+      }
+    },
+    "elitigation": {
+      "status": "success",
+      "latency_ms": 9800,
+      "data": {
+        "cases": [
+          {
+            "case_name": "Grab Inc v Competition and Consumer Commission of Singapore",
+            "citation": "[2023] SGCAB 1",
+            "date": "2023-09-28",
+            "court": "Competition Appeal Board",
+            "subject_matter": "Competition Law"
+          }
+        ]
+      }
+    }
+  },
+  "synthesis": {
+    "risk_score": 3,
+    "risk_level": "LOW-MEDIUM",
+    "summary": "Grab Holdings is a live, publicly traded Singaporean super-app with strong recent financial performance and expanding financial services operations. No significant red flags identified across available sources.",
+    "red_flags": [
+      {
+        "severity": "low",
+        "source": "google_news",
+        "detail": "MAS reviewing payment licence conditions — potential regulatory tightening"
+      },
+      {
+        "severity": "info",
+        "source": "glassdoor",
+        "detail": "Employee sentiment shows work-life balance concerns — may indicate operational strain"
+      }
+    ],
+    "key_facts": [
+      "Registered in Singapore since 2012, status: Live",
+      "NASDAQ-listed, market cap $18.2B",
+      "Record Q4 revenue with raised 2026 guidance",
+      "Expanding into Malaysia lending market",
+      "3.8/5 Glassdoor rating across 2,340 reviews"
+    ],
+    "data_completeness": "5/5 sources returned data",
+    "citations": [
+      {"fact": "UEN 201224024R", "source": "ACRA BizFile"},
+      {"fact": "Record Q4 revenue", "source": "Reuters via Google News"},
+      {"fact": "3.8 Glassdoor rating", "source": "Glassdoor"},
+      {"fact": "$18.2B market cap", "source": "Yahoo Finance"}
+    ]
+  }
+}
