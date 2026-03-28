@@ -1,3 +1,4 @@
+import https from 'https';
 import { formatTemplate } from './templates';
 import type { ActionResult } from './dispatcher';
 
@@ -15,24 +16,44 @@ export async function sendTelegram(
   config: Record<string, string>,
   data: Record<string, unknown>,
 ): Promise<ActionResult> {
-  try {
-    const response = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: config.chat_id,
-        text: formatTemplate(config.template ?? '{title}', data),
-      }),
-    });
-
-    const body = await response.json().catch(() => ({ ok: false, description: 'Failed to parse response' }));
-    if (!body.ok) {
-      return { action_type: 'telegram', success: false, error: body.description ?? 'Telegram API error', timestamp: new Date().toISOString() };
-    }
-
-    return { action_type: 'telegram', success: true, error: null, timestamp: new Date().toISOString() };
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return { action_type: 'telegram', success: false, error: msg, timestamp: new Date().toISOString() };
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) {
+    return { action_type: 'telegram', success: false, error: 'TELEGRAM_BOT_TOKEN not set', timestamp: new Date().toISOString() };
   }
+
+  const body = JSON.stringify({
+    chat_id: config.chat_id,
+    text: formatTemplate(config.template ?? '{title}', data),
+  });
+
+  return new Promise((resolve) => {
+    const req = https.request(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      },
+      (res) => {
+        let raw = '';
+        res.on('data', (c) => { raw += c; });
+        res.on('end', () => {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed.ok) {
+              resolve({ action_type: 'telegram', success: true, error: null, timestamp: new Date().toISOString() });
+            } else {
+              resolve({ action_type: 'telegram', success: false, error: parsed.description ?? 'Telegram API error', timestamp: new Date().toISOString() });
+            }
+          } catch {
+            resolve({ action_type: 'telegram', success: false, error: 'Failed to parse response', timestamp: new Date().toISOString() });
+          }
+        });
+      },
+    );
+    req.on('error', (err) => {
+      resolve({ action_type: 'telegram', success: false, error: err.message, timestamp: new Date().toISOString() });
+    });
+    req.write(body);
+    req.end();
+  });
 }
