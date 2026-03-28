@@ -17,11 +17,16 @@ export async function sendEmail(
   data: Record<string, unknown>,
 ): Promise<ActionResult> {
   const resend = new Resend(process.env.RESEND_API_KEY!);
-  await resend.emails.send({
-    from: 'Fathom <alerts@fathom.finance>',
+  const { error } = await resend.emails.send({
+    from: 'Fathom <onboarding@resend.dev>',
     to: config.to,
     subject: formatTemplate(config.subject ?? 'Fathom Alert: {title}', data),
     html: formatTemplate(config.template ?? '<p>{title}</p><p>{summary}</p>', data),
   });
+
+  if (error) {
+    return { action_type: 'email', success: false, error: error.message, timestamp: new Date().toISOString() };
+  }
+
   return { action_type: 'email', success: true, error: null, timestamp: new Date().toISOString() };
 }
