@@ -131,6 +131,7 @@ export async function POST(req: Request) {
         url: s.url,
         goal: s.goal,
         browser_profile: s.browserProfile as 'lite' | 'stealth',
+        ...(s.proxyEnabled ? { proxy_config: { enabled: true } } : {}),
       },
     }));
 
@@ -144,7 +145,15 @@ export async function POST(req: Request) {
           return normalisePublications(source, r.data!);
         });
 
-      const rssPubs = await fetchRSSSources(jurisdictions);
+      // RSS fallback: only fetch for sources where TinyFish failed
+      const succeededIds = new Set(results.filter(r => r.status === 'success').map(r => r.source_id));
+      const skipRssIds = new Set<string>();
+      for (const src of REGULATORY_SOURCES) {
+        if (succeededIds.has(src.id) && src.rssFallbackId) {
+          skipRssIds.add(src.rssFallbackId);
+        }
+      }
+      const rssPubs = await fetchRSSSources(jurisdictions, skipRssIds);
       const allPubs = [...tinyfishPubs, ...rssPubs];
 
       return {

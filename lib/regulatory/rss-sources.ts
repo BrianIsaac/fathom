@@ -104,15 +104,20 @@ export const RSS_SOURCES: RegulatoryRSSSource[] = [
 ];
 
 /**
- * Fetches all RSS/API sources for the given jurisdictions.
+ * Fetches RSS/API sources for the given jurisdictions, skipping any IDs
+ * where TinyFish already succeeded (fallback-only mode).
  *
  * Args:
  *   jurisdictions: Array of jurisdiction codes to filter by.
+ *   skipIds: Set of RSS source IDs to skip (TinyFish succeeded for these).
  *
  * Returns:
- *   Array of normalised publications from all matching RSS/API sources.
+ *   Array of normalised publications from matching RSS/API sources.
  */
-export async function fetchRSSSources(jurisdictions: string[]): Promise<NormalisedPublication[]> {
+export async function fetchRSSSources(
+  jurisdictions: string[],
+  skipIds: Set<string> = new Set(),
+): Promise<NormalisedPublication[]> {
   const jurisdictionToSources: Record<string, string[]> = {
     'US': ['sec_press'],
     'HK': ['hkma_circulars', 'hkma_press'],
@@ -123,7 +128,9 @@ export async function fetchRSSSources(jurisdictions: string[]): Promise<Normalis
     jurisdictions.flatMap(j => jurisdictionToSources[j] ?? [])
   );
 
-  const activeSources = RSS_SOURCES.filter(s => activeIds.has(s.id));
+  const activeSources = RSS_SOURCES.filter(s => activeIds.has(s.id) && !skipIds.has(s.id));
+
+  if (activeSources.length === 0) return [];
 
   const results = await Promise.allSettled(
     activeSources.map(async (source) => {
