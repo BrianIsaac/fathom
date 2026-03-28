@@ -25,11 +25,13 @@ export const COLOUR_OPTIONS = [
   { value: '140', label: 'Green' },
 ];
 
-export type Species = 'auto' | 'clownfish' | 'angelfish' | 'pufferfish' | 'tinyfish';
+export type Species = 'auto' | 'clownfish' | 'angelfish' | 'pufferfish' | 'tinyfish' | 'tinyfish_coder' | 'tinyfish_matrix';
 
 export const SPECIES_OPTIONS: { value: Species; label: string }[] = [
   { value: 'auto', label: 'Auto (from module)' },
   { value: 'tinyfish', label: 'TinyFish' },
+  { value: 'tinyfish_coder', label: 'TinyFish Coder' },
+  { value: 'tinyfish_matrix', label: 'TinyFish Matrix' },
   { value: 'clownfish', label: 'Clownfish' },
   { value: 'angelfish', label: 'Angelfish' },
   { value: 'pufferfish', label: 'Pufferfish' },
@@ -63,7 +65,9 @@ const ANCHORS: Record<string, FishAnchors> = {
   clownfish: { hatX: 48, hatY: 16, eyeX: 58, eyeY: 28, chinX: 48, chinY: 42 },
   angelfish: { hatX: 38, hatY: 16, eyeX: 52, eyeY: 32, chinX: 44, chinY: 50 },
   pufferfish: { hatX: 36, hatY: 14, eyeX: 46, eyeY: 32, chinX: 38, chinY: 50 },
-  tinyfish: { hatX: 30, hatY: 10, eyeX: 44, eyeY: 31, chinX: 38, chinY: 50 },
+  tinyfish: { hatX: 36, hatY: 12, eyeX: 51, eyeY: 22, chinX: 44, chinY: 42 },
+  tinyfish_coder: { hatX: 38, hatY: 12, eyeX: 54, eyeY: 28, chinX: 46, chinY: 44 },
+  tinyfish_matrix: { hatX: 36, hatY: 12, eyeX: 55, eyeY: 21, chinX: 50, chinY: 40 },
 };
 
 export function generateFishSVG(
@@ -88,8 +92,9 @@ export function generateFishSVG(
   const anchors = ANCHORS[species];
   const acc = accessorySVG(accessory, anchors);
 
-  const vw = species === 'pufferfish' || species === 'tinyfish' ? 72 : 80;
-  const vh = species === 'angelfish' || species === 'pufferfish' || species === 'tinyfish' ? 56 : 48;
+  const isTiny = species.startsWith('tinyfish');
+  const vw = species === 'pufferfish' || isTiny ? 72 : 80;
+  const vh = species === 'angelfish' || species === 'pufferfish' || isTiny ? 56 : 48;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh + 16}" width="${vw}" height="${vh + 16}">${body}${acc}</svg>`;
 }
@@ -97,6 +102,8 @@ export function generateFishSVG(
 function fishBody(species: string, h: number): string {
   switch (species) {
     case 'tinyfish': return tinyfishBody(h);
+    case 'tinyfish_coder': return tinyfishCoderBody(h);
+    case 'tinyfish_matrix': return tinyfishMatrixBody(h);
     case 'clownfish': return clownfishBody(h);
     case 'angelfish': return angelfishBody(h);
     case 'pufferfish': return pufferfishBody(h);
