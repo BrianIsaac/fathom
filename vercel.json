@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "app/api/dd/**/*": { "maxDuration": 120 },
+    "app/api/earnings/**/*": { "maxDuration": 120 },
+    "app/api/regulatory/**/*": { "maxDuration": 120 },
+    "app/api/sentry/**/*": { "maxDuration": 120 },
+    "app/api/eval/**/*": { "maxDuration": 300 },
+    "app/api/synthesise/**/*": { "maxDuration": 60 },
+    "app/api/tinyfish/**/*": { "maxDuration": 60 }
+  },
+  "crons": [
+    { "path": "/api/sentry/regulatory", "schedule": "0 7 * * *" },
+    { "path": "/api/eval/scheduled", "schedule": "0 6 * * *" }
+  ]
+}
