@@ -146,30 +146,32 @@ export default function RegulatoryPage() {
 
       {publications.length > 0 && (
         <div className="space-y-3">
-          {[...publications].sort((a, b) => Number(b.relevance_score) - Number(a.relevance_score)).map((pub, i) => (
+          {[...publications].sort((a, b) => (Number(b.relevance_score) || 0) - (Number(a.relevance_score) || 0)).map((pub, i) => (
             <Card key={i}>
               <CardContent className="pt-4">
                 <div className="flex items-start gap-3">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">{String(pub.relevance_score)}</div>
-                    <Progress value={Number(pub.relevance_score) * 10} className="w-12 mt-1" />
-                  </div>
+                  {pub.relevance_score != null && (
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{String(pub.relevance_score)}</div>
+                      <Progress value={Number(pub.relevance_score) * 10} className="w-12 mt-1" />
+                    </div>
+                  )}
                   <div className="flex-1 space-y-1">
-                    <p className="font-medium text-sm">{String(pub.title)}</p>
+                    <p className="font-medium text-sm">{String(pub.title ?? 'Untitled')}</p>
                     <div className="flex flex-wrap gap-2 text-xs">
-                      <Badge>{String(pub.regulator)}</Badge>
-                      <Badge variant="outline">{String(pub.jurisdiction)}</Badge>
-                      <Badge variant="secondary">{String(pub.document_type)}</Badge>
-                      <span className="text-muted-foreground">{String(pub.date)}</span>
+                      {pub.regulator != null && <Badge>{String(pub.regulator)}</Badge>}
+                      {pub.jurisdiction != null && <Badge variant="outline">{String(pub.jurisdiction)}</Badge>}
+                      {pub.document_type != null && <Badge variant="secondary">{String(pub.document_type)}</Badge>}
+                      {pub.date != null && <span className="text-muted-foreground">{String(pub.date)}</span>}
                       {pub.comment_deadline ? (
                         <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
                           Deadline: {String(pub.comment_deadline)}
                         </Badge>
                       ) : null}
                     </div>
-                    <p className="text-xs text-muted-foreground">{String(pub.summary)}</p>
+                    {pub.summary != null && <p className="text-xs text-muted-foreground">{String(pub.summary)}</p>}
                     <div className="flex gap-1">
-                      {(pub.affected_domains as string[] ?? []).map((d, j) => (
+                      {(Array.isArray(pub.affected_domains) ? pub.affected_domains as string[] : []).map((d, j) => (
                         <Badge key={j} variant="outline" className="text-xs">{d}</Badge>
                       ))}
                     </div>

@@ -16,7 +16,7 @@ const SENTRY_SOURCES = [
   { id: 'mas_publications', name: 'MAS', jurisdiction: 'SG' },
   { id: 'mas_news', name: 'MAS News', jurisdiction: 'SG' },
   { id: 'sec_press', name: 'SEC', jurisdiction: 'US' },
-  { id: 'hkma_circulars', name: 'HKMA', jurisdiction: 'HK' },
+  { id: 'hkma_brdr', name: 'HKMA', jurisdiction: 'HK' },
   { id: 'fca_publications', name: 'FCA', jurisdiction: 'UK' },
   { id: 'sgx_regco', name: 'SGX RegCo', jurisdiction: 'SG' },
 ];
@@ -178,15 +178,17 @@ export default function SentriesPage() {
             <div className="space-y-3">
               {publications.map((pub, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-lg border p-3">
-                  <Badge variant="outline">{String(pub.relevance_score)}</Badge>
+                  {pub.relevance_score != null && (
+                    <Badge variant="outline">{String(pub.relevance_score)}</Badge>
+                  )}
                   <div className="flex-1 space-y-1">
-                    <p className="font-medium text-sm">{String(pub.title)}</p>
+                    <p className="font-medium text-sm">{String(pub.title ?? 'Untitled')}</p>
                     <div className="flex gap-2 text-xs text-muted-foreground">
-                      <Badge variant="secondary">{String(pub.regulator)}</Badge>
-                      <span>{String(pub.date)}</span>
-                      <Badge variant="outline">{String(pub.document_type)}</Badge>
+                      {pub.regulator != null && <Badge variant="secondary">{String(pub.regulator)}</Badge>}
+                      {pub.date != null && <span>{String(pub.date)}</span>}
+                      {pub.document_type != null && <Badge variant="outline">{String(pub.document_type)}</Badge>}
                     </div>
-                    <p className="text-xs text-muted-foreground">{String(pub.summary)}</p>
+                    {pub.summary != null && <p className="text-xs text-muted-foreground">{String(pub.summary)}</p>}
                   </div>
                 </div>
               ))}
