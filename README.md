@@ -2,32 +2,29 @@
 
 **Deep intelligence, surfaced fast.**
 
-Fathom is an autonomous compliance intelligence platform that deploys persistent web agents across the hidden web — sites with no APIs, heavy JavaScript rendering, and aggressive anti-bot measures — to detect regulatory changes, extract due diligence data, and deliver structured intelligence to compliance teams before they even start their day.
+Fathom is an autonomous compliance intelligence platform that deploys persistent web agents across the hidden web — sites with no APIs, heavy JavaScript rendering, and aggressive anti-bot measures — to detect regulatory changes, scan for security vulnerabilities, extract due diligence data, and deliver structured intelligence to compliance and security teams before they even start their day.
 
 ## The Problem
 
-Financial compliance teams spend hours every morning manually checking regulatory websites (MAS, SEC, HKMA, FCA, SGX) for new publications, cross-referencing company filings across fragmented data sources, and tracking earnings data across investor relations pages. These sites have no public APIs, render content with JavaScript, and actively block automated access. The result: slow, expensive, error-prone manual processes where critical regulatory changes can be missed until it's too late.
+Compliance and security teams are stretched thin. Regulatory analysts spend hours manually checking government websites (MAS, SEC, HKMA, FCA, SGX) for new publications. Security engineers run periodic vulnerability scans with expensive tools that miss business logic flaws. Due diligence teams cross-reference company filings across fragmented sources. These sites have no public APIs, render content with JavaScript, and actively block automated access.
 
 ## The Solution
 
-Fathom deploys TinyFish web agents as persistent "fish" in a monitoring pool. Each agent is configured with conditions and actions — when a regulatory change matches an agent's conditions, it autonomously dispatches alerts via Slack, email, or Telegram. The system uses a three-tier cost-optimised cascade to monitor sources efficiently, only invoking expensive browser automation when actual changes are detected.
+Fathom deploys TinyFish web agents as persistent "fish" in a monitoring pool. Each agent is configured with conditions and actions — when a change or vulnerability matches an agent's conditions, it autonomously dispatches alerts via Slack, email, or Telegram.
 
-### Three-Tier Cascade
+### Core Capabilities
 
-| Tier | Method | Cost | Latency |
-|------|--------|------|---------|
-| Tier 0 | HTTP ETag conditional check | $0 | <500ms |
-| Tier 1 | Content hash comparison (SHA-256) | $0 | 1-3s |
-| Tier 2 | Full TinyFish browser extraction | ~$0.20-0.45 | 15-40s |
-
-Each source is checked at the cheapest tier first. Only when a change is confirmed does it escalate to full extraction — reducing daily monitoring costs by ~95%.
+- **Regulatory Monitoring** — Three-tier cost-optimised cascade (ETag, content hash, full extraction) across 8 regulators. 95% cost reduction vs full extraction on every check.
+- **Cyber Vulnerability Scanning** — OWASP Top-10 automated security assessment. Three-tier scan: HTTP header/config checks, authenticated API testing, then TinyFish browser agents for file upload, SSRF, and business logic abuse. Covers broken access control, auth failures, injection, insecure design, misconfiguration, vulnerable components, and more.
+- **Due Diligence** — Company name in, risk-scored brief out from 5 parallel sources (news, financials, filings, court cases, employer reviews) in ~90 seconds.
+- **Earnings Intelligence** — Ticker portfolio to structured earnings comparison cards with beat/miss indicators.
 
 ### Agent System
 
 Agents are persistent monitors with configurable conditions and actions. Each agent:
-- Targets a module (regulatory, due diligence, or earnings)
-- Defines conditions using fact/operator/value checks (e.g. `relevance_score > 7 AND regulator = MAS`)
-- Dispatches actions when conditions match: Slack, email, Telegram, webhook, or Google Sheets
+- Targets a module (regulatory, due diligence, earnings, or cyber)
+- Defines conditions using fact/operator/value checks (e.g. `risk_score > 5 AND critical_count > 0`)
+- Dispatches actions when conditions match: Slack, email, Telegram, webhook
 - Gets a unique fish sprite (species, colour, accessory) rendered in the Fathom Pool
 
 ## Pages
@@ -36,7 +33,8 @@ Agents are persistent monitors with configurable conditions and actions. Each ag
 |-------|------|-------------|
 | `/` | Fathom Pool | Animated fishbowl showing all deployed agents with real-time action bubbles |
 | `/deploy` | Deploy | Create and manage persistent agents with conditions, actions, and fish config |
-| `/sentries` | Sentries | Manual trigger of the sentry cascade with tier-by-tier visualisation |
+| `/sentries` | Sentries | Manual trigger of the regulatory sentry cascade with tier-by-tier visualisation |
+| `/cyber` | Cyber Scan | OWASP Top-10 vulnerability scanner with three-tier assessment and findings table |
 | `/due-diligence` | Due Diligence | Company name in, risk-scored brief out from 5 parallel sources |
 | `/earnings` | Earnings | Ticker portfolio to structured earnings comparison cards |
 | `/regulatory` | Regulatory | Scan regulators by domain and jurisdiction with relevance scoring |
