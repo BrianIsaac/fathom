@@ -26,6 +26,22 @@ export async function sendTelegram(
     text: formatTemplate(config.template ?? '{title}', data),
   });
 
+  const MAX_RETRIES = 3;
+  let lastError = '';
+
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const result = await sendOnce(token, body);
+    if (result.success) return result;
+    lastError = result.error ?? 'Unknown error';
+    if (attempt < MAX_RETRIES - 1) {
+      await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
+    }
+  }
+
+  return { action_type: 'telegram', success: false, error: lastError, timestamp: new Date().toISOString() };
+}
+
+function sendOnce(token: string, body: string): Promise<ActionResult> {
   return new Promise((resolve) => {
     const req = https.request(
       `https://api.telegram.org/bot${token}/sendMessage`,
