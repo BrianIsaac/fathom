@@ -283,6 +283,21 @@ export async function POST(req: Request) {
       const criticalCount = allFindings.filter(f => f.status === 'VULNERABLE' && f.severity === 'Critical').length;
       const highCount = allFindings.filter(f => f.status === 'VULNERABLE' && f.severity === 'High').length;
 
+      const mediumCount = allFindings.filter(f => f.status === 'VULNERABLE' && f.severity === 'Medium').length;
+
+      const owaspCoverage: Record<string, string> = {};
+      for (const f of allFindings) {
+        if (f.category && !owaspCoverage[f.category]) {
+          owaspCoverage[f.category] = f.status;
+        }
+      }
+
+      const vulnFindings = allFindings.filter(f => f.status === 'VULNERABLE');
+      const topPriority = vulnFindings
+        .filter(f => f.severity === 'Critical' || f.severity === 'High')
+        .slice(0, 3)
+        .map(f => `${f.name}: ${f.severity} — ${f.category}`);
+
       const finalResult = {
         target,
         generated_at: new Date().toISOString(),
@@ -296,6 +311,9 @@ export async function POST(req: Request) {
           not_vulnerable: notVulnCount,
           critical_count: criticalCount,
           high_count: highCount,
+          medium_count: mediumCount,
+          top_priority: topPriority,
+          owasp_coverage: owaspCoverage,
         },
       };
 

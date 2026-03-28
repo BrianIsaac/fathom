@@ -263,4 +263,4 @@ export default function CyberScanPage() {
   );
 }
 
-const ATTACK_AGENTS_COUNT = 9;
+const ATTACK_AGENTS_COUNT = 10;
